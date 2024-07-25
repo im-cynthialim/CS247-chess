@@ -16,6 +16,5 @@ class Computer : public Player
         virtual Move chooseMove(vector<vector<Piece>>) = 0;
 };
 
-
 #endif
 

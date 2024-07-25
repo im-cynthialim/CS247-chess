@@ -13,7 +13,8 @@ class Player
     Colour colour; 
     bool canCastle;
 
-    Player (Colour colour, bool canCastle);
+    protected: 
+        Player (Colour colour, bool canCastle);
 
     public:
         vector<Move> findAllMoves (vector<vector<Piece>>);

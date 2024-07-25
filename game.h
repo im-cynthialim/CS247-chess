@@ -31,6 +31,14 @@ class Game {
         void render();
         void resign();
         void setup();
+
+        Game(const string& whiteType, const string& blackType) {
+            if (whiteType == "human") {
+                white = new Human()
+            }
+        }
+
+        
 };
 
 #endif

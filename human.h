@@ -10,6 +10,7 @@ class Human : public Player
 {
     public:
         Move chooseMove(vector<vector<Piece>>) override;
+        Human(Colour colour, bool canCastle) : Player(colour, canCastle) {}
 };
 
 
