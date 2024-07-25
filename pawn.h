@@ -7,11 +7,10 @@
 using namespace std;
 
 class Pawn : public Piece {
-    
     vector<Move> possibleMoves(vector<vector<Piece*>>, int, int) override;
     public:
         Pawn(Colour c, char pieceType); 
         virtual ~Pawn();
-};
+}
 
 #endif
