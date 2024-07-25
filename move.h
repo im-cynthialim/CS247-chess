@@ -8,7 +8,9 @@ using namespace std;
 
 class Move {
     int fromX, fromY, toY, toX;
-    Move(int fromX, int fromY, int toY, int toX);
+    public: 
+        Move(int fromX, int fromY, int toY, int toX);
+        virtual ~Move();
 };
 
 #endif
