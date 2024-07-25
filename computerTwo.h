@@ -9,7 +9,8 @@ using namespace std;
 class ComputerTwo : public Computer 
 {
     public:
-        virtual Move chooseMove(vector<vector<Piece>>) = 0;
+        Move chooseMove(vector<vector<Piece>>) override;
+        ComputerTwo(Colour colour, bool canCastle) : Computer(colour, canCastle) {}
 };
 
 
