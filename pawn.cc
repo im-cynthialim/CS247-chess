@@ -19,7 +19,7 @@ Colour Piece::getColour() {
     return colour;
 }
 
-vector<Move> Pawn::possibleMoves(vector<vector<Piece>> board) {
+vector<Move> Pawn::possibleMoves(vector<vector<Piece>> board, int row, int col) {
     // return an array of moves for the pawn
     vector<Move> moves;
 

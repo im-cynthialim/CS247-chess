@@ -7,7 +7,7 @@
 using namespace std;
 
 class Pawn : public Piece {
-    vector<Move> possibleMoves(vector<vector<Piece>>) override;
+    vector<Move> possibleMoves(vector<vector<Piece>>, int, int) override;
 };
 
 #endif
