@@ -89,6 +89,8 @@ class Game {
                 cout << "cannot enter setup mode";
             }
 
+            gameCreatedViaSetup = true;
+
             std::string command;
             while (std::cin >> command) {
                 if(command == "+") {
@@ -102,10 +104,9 @@ class Game {
                     if(pieceType == 'p') {
                         board[rowLoc][colLoc] = new Pawn(WHITE, 'p');
                     }
+                    //...
 
-                    
-
-
+            
                 } else if (command == "-") {
                     string pieceLocation;
                     cin >> pieceLocation;
@@ -125,14 +126,46 @@ class Game {
                     }
 
                 } else if (command == "done") {
+                    int numBlackKings = 0; int numWhiteKings = 0;
+                    int whiteKingX = 0; int whiteKingY = 0; int blackKingX = 0; int blackKingY = 0;
+                    bool pawnWrongSpot = false;
 
+                    for (size_t row = 0; row < board.size(); ++row) {
+                        for (size_t col = 0; col < board[row].size(); ++col) {
+                            Piece* piece = board[row][col];
+                            if(piece != nullptr)  {
+                                //pawns not in first or last row
+                                if((row == 0 || row == board.size() - 1) && (piece->getPieceType() == 'p' || piece->getPieceType() == 'P')) {
+                                    pawnWrongSpot = true;
+                                }
 
+                                //update number of White Kings and position
+                                if(piece->getPieceType() == 'K') {
+                                    numWhiteKings++; whiteKingX = row; whiteKingY = col;
+                                }
+
+                                //update number of Black Kings and position
+                                if(piece->getPieceType() == 'k') {
+                                    numWhiteKings++; blackKingX = row; blackKingY = col;
+                                }
+                            }
+                        }
+                    }
+
+                    //make sure the kings arent in check 
+                    if (
+                        numBlackKings != 1 ||
+                        numWhiteKings != 1 ||
+                        pawnWrongSpot == true 
+                        // || !canAccess(whiteKingX, whiteKingY).isEmspty() || 
+                        // !canAccess(blackKingX, blackKingY).isEmpty() ||
+                    )  {
+                    cout << "Cannot exit setup mode. You have a mistake";
+                    }
+                    else {
+                        break;
+                    }
                 }
-            }
-
-            gameCreatedViaSetup = true;
-            while (true) {
-
             }
         }
 };
