@@ -1,4 +1,7 @@
 #include "rook.h"
+#include "piece.h"
+
+Rook::Rook(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 
 vector<Move> Rook::possibleMoves(vector<vector<Piece*>> board, int row, int col){
     vector<Move> validMoves {};
@@ -69,4 +72,8 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> board, int row, int col)
     }
     --j;
     }
+
+    return validMoves;
 }
+
+Rook::~Rook() {};

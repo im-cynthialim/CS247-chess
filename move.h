@@ -7,10 +7,12 @@
 using namespace std;
 
 class Move {
-    int fromX, fromY, toY, toX;
+    int fromX, fromY, toX, toY;
     public: 
-        Move(int fromX, int fromY, int toY, int toX);
+        Move(int fromX, int fromY, int toX, int toY);
+        void getFields();
         virtual ~Move();
+        
 };
 
 #endif

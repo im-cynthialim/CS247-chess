@@ -18,6 +18,7 @@ class Piece {
         char getPieceType();
         Colour getColour();
         vector<Move> listMoves (vector<vector<Piece*>>, int, int);
+        virtual ~Piece();
 };
 
 #endif
