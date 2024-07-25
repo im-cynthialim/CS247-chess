@@ -1,13 +1,12 @@
-#ifndef PAWN_H
-#define PAWN_H
+#ifndef ROOK_H
+#define ROOK_H
 
 #include <vector>
 #include "piece.h"
 
 using namespace std;
 
-class Pawn : public Piece {
-    Pawn(Colour c, char pieceType);
+class Rook : public Piece {
     vector<Move> possibleMoves(vector<vector<Piece*>>, int, int) override;
 };
 
