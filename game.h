@@ -13,6 +13,7 @@
 #include "piece.h"
 #include "move.h"
 #include "enums.h"
+#include "pawn.h"
 
 
 using namespace std;
@@ -57,35 +58,27 @@ class Game {
 
         void addPlayersToGame(const string& whiteType, const string& blackType) {
             if (whiteType == "human") {
-                // white = unique_ptr<Human>(new Human(WHITE, true));
                 white = new Human(WHITE, true);
             }
             else if (whiteType == "computer1") {
-                // white = unique_ptr<ComputerOne>(new ComputerOne(WHITE, true));
                 white = new ComputerOne(WHITE, true);
             }
             else if (whiteType == "computer2") {
-                // white = unique_ptr<ComputerTwo>(new ComputerTwo(WHITE, true));
                 white = new ComputerTwo(WHITE, true);
             }
             else if (whiteType == "computer3") {
-                // white = unique_ptr<ComputerThree>(new ComputerThree(WHITE, true));
                 white = new ComputerThree(WHITE, true);
             }
             if (blackType == "human") {
-                // black = unique_ptr<Human>(new Human(BLACK, true));
                 black = new Human(BLACK, true);
             }
             else if (blackType == "computer1") {
-                // black = unique_ptr<ComputerOne>(new ComputerOne(BLACK, true));
                 black = new ComputerOne(BLACK, true);
             }
             else if (blackType == "computer2") {
-                // black = unique_ptr<ComputerTwo>(new ComputerTwo(BLACK, true));
                 black = new ComputerTwo(BLACK, true);
             }
             else if (blackType == "computer3") {
-                // black = unique_ptr<ComputerThree>(new ComputerThree(BLACK, true));
                 black = new ComputerThree(BLACK, true);
             }
         }
@@ -96,16 +89,52 @@ class Game {
                 cout << "cannot enter setup mode";
             }
 
+            std::string command;
+            while (std::cin >> command) {
+                if(command == "+") {
+                    char pieceType;
+                    string pieceLocation;
+                    cin >> pieceType >> pieceLocation;
+
+                    int rowLoc = 8 - pieceLocation[0];
+                    int colLoc = pieceLocation[1]  - 'a';
+
+                    if(pieceType == 'p') {
+                        board[rowLoc][colLoc] = new Pawn(WHITE, 'p');
+                    }
+
+                    
+
+
+                } else if (command == "-") {
+                    string pieceLocation;
+                    cin >> pieceLocation;
+
+                    int rowLoc = 8 - pieceLocation[0];
+                    int colLoc = pieceLocation[1]  - 'a';
+
+                    if(board[rowLoc][colLoc] != nullptr) {
+                        delete board[rowLoc][colLoc];
+                    }
+                } else if (command == "=") {
+                    string colour;
+                    if(colour == "black") {
+                        playerTurn = black;
+                    } else {
+                        playerTurn = white;
+                    }
+
+                } else if (command == "done") {
+
+
+                }
+            }
+
             gameCreatedViaSetup = true;
             while (true) {
-                // string setupCommand;
-                // std::getline(std::cin, setupCommand);
-
-                // if (setupCommand ... ) {
 
             }
         }
-
 };
 
 #endif

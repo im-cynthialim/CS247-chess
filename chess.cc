@@ -15,11 +15,11 @@ int main () {
     Game* game = new Game();
     std::string command;
 
-    while (true) {
+    while (std::cin >> command) {
         std::getline(std::cin, command);
 
         // Parse the command and execute the appropriate action
-        if (command.substr(0, 4) == "game") {
+        if (command == "game") {
 
             if(game->status == "Running") {
                 delete game;
@@ -33,14 +33,12 @@ int main () {
             game->setUpGame(whitePlayer, blackPlayer);
         }
 
-        else if (command.substr(0, 5) == "setup") {
+        else if (command == "setup") {
             game->setup();
         }
         
         
-        
-        
-        else if (command.substr(0, 4) == "move") {
+        else if (command == "move") {
             game->makeMove();
 
             if(game->status == "WhiteWon") {
@@ -52,7 +50,7 @@ int main () {
                 game = new Game(); //create a fresh game and the delete the old one
             }
 
-        } else if (command.substr(0, 6) == "resign") {
+        } else if (command == "resign") {
             if (game) {
                 // Handle resign command
                 game->resign();
