@@ -10,7 +10,7 @@ class ComputerThree : public Computer
 {
     public:
         ComputerThree(Colour colour) : Computer(colour) {}
-        Move chooseMove(vector<vector<Piece*>> board) override {
+        Move chooseMove(const vector<vector<Piece*>>& board) override {
             vector<Move> avoidCaptureMoves = avoidCaptures(board);
             if(avoidCaptureMoves.size() > 0) {
                 int randomNumber = std::rand() % avoidCaptureMoves.size();
