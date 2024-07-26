@@ -14,6 +14,7 @@
 #include "move.h"
 #include "enums.h"
 #include "pawn.h"
+#include "king.h"
 
 
 using namespace std;
@@ -95,24 +96,31 @@ class Game {
             while (std::cin >> command) {
                 if(command == "+") {
                     char pieceType;
-                    string pieceLocation;
-                    cin >> pieceType >> pieceLocation;
+                    char pieceCol;
+                    int pieceRow;
+                    cin >> pieceType >> pieceCol >> pieceRow;
 
-                    int rowLoc = 8 - pieceLocation[0];
-                    int colLoc = pieceLocation[1]  - 'a';
+                    int rowLoc = 8 - pieceRow;
+                    int colLoc = pieceCol - 'a';
 
-                    if(pieceType == 'p') {
-                        board[rowLoc][colLoc] = new Pawn(WHITE, 'p');
+                    if(pieceType == 'P') {
+                        board[rowLoc][colLoc] = new Pawn(WHITE, 'P');
+                    }
+                    else if (pieceType == 'K') {
+                        board[rowLoc][colLoc] = new King(WHITE, 'K');
+                    } else if (pieceType == 'k'){
+                        board[rowLoc][colLoc] = new King(BLACK, 'k');
                     }
                     //...
 
             
                 } else if (command == "-") {
-                    string pieceLocation;
-                    cin >> pieceLocation;
+                    char pieceCol;
+                    int pieceRow;
+                    cin >> pieceCol >> pieceRow;
 
-                    int rowLoc = 8 - pieceLocation[0];
-                    int colLoc = pieceLocation[1]  - 'a';
+                    int rowLoc = 8 - pieceRow;
+                    int colLoc = pieceCol - 'a';
 
                     if(board[rowLoc][colLoc] != nullptr) {
                         delete board[rowLoc][colLoc];
@@ -160,13 +168,29 @@ class Game {
                         // || !canAccess(whiteKingX, whiteKingY).isEmspty() || 
                         // !canAccess(blackKingX, blackKingY).isEmpty() ||
                     )  {
-                    cout << "Cannot exit setup mode. You have a mistake";
+                    cout << "Cannot exit setup mode. You have a mistake" << numBlackKings << numWhiteKings << pawnWrongSpot;
                     }
                     else {
                         break;
                     }
                 }
             }
+
+
+            //print the board
+            for (size_t row = 0; row < board.size(); ++row) {
+                        for (size_t col = 0; col < board[row].size(); ++col) {
+                            Piece* piece = board[row][col];
+                            if(piece != nullptr)  {
+                                cout << piece->getPieceType();
+                            } else {
+                                cout << " ";
+                            }
+                            cout << " ";
+                        }
+                        cout << "\n";
+            }
+
         }
 };
 
