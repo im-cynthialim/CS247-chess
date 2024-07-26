@@ -15,11 +15,12 @@
 #include "enums.h"
 #include "pawn.h"
 #include "king.h"
+#include "subject.h"
 
 
 using namespace std;
 
-class Game {
+class Game : public Subject {
     Player* white; // Player is abstract so ptr needed for dynamic type
     Player* black;
     // vector<vector<Piece*>> board;
@@ -34,7 +35,7 @@ class Game {
         string status;
 
         // void makeMove();
-        // void getState(int, int);
+        char getState(int row, int col) const override;
         // void render();
         // void resign();
 
