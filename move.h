@@ -12,7 +12,19 @@ class Move {
         Move(int fromX, int fromY, int toX, int toY);
         void getFields();
         virtual ~Move();
-        
+
+        int getFromX() {
+            return fromX;
+        }
+        int getFromY() {
+            return fromY;
+        }
+        int getToX() {
+            return toX;
+        }
+        int getToY() {
+            return toY;
+        }
 };
 
 #endif

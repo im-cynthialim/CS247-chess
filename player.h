@@ -10,10 +10,9 @@ using namespace std;
 
 class Player 
 {
-    Colour colour; 
-    bool canCastle;
-
     protected: 
+        Colour colour; 
+        bool canCastle;
         Player (Colour colour, bool canCastle);
 
     public:
