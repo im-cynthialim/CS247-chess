@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <cctype> //to lowercase chars
 #include <vector>
 #include "player.h"
 #include "human.h"
@@ -104,15 +105,41 @@ class Game : public Subject {
                     int rowLoc = 8 - pieceRow;
                     int colLoc = pieceCol - 'a';
 
-                    if(pieceType == 'P') {
-                        board[rowLoc][colLoc] = new Pawn(WHITE, 'P');
+                    char toLower = tolower(pieceType); // generalize all inputs to lowercase for faster piece classifying
+
+
+                    switch (toLower) {
+                    // pawn
+                    case 'p':
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'p' ? BLACK : WHITE, pieceType);
+                        break;
+                    // king
+                    case 'k':
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'k' ? BLACK : WHITE, pieceType);
+                        break;
+                    // queen
+                    case 'q': {
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'q' ? BLACK : WHITE, pieceType);
+                        break;
                     }
-                    else if (pieceType == 'K') {
-                        board[rowLoc][colLoc] = new King(WHITE, 'K');
-                    } else if (pieceType == 'k'){
-                        board[rowLoc][colLoc] = new King(BLACK, 'k');
+                    // knight
+                    case 'n': {
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'n' ? BLACK : WHITE, pieceType);
+                        break;
                     }
-                    //...
+                    // bishop
+                    case 'b': {
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                    }
+                    //rook
+                    case 'r': {
+                        board[rowLoc][colLoc] = new Pawn(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                    }
+                    default:
+                        cerr << "Invalid command" << endl;
+                    }
+                
+                   notifyObservers();
 
             
                 } else if (command == "-") {

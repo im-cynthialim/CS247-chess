@@ -5,6 +5,8 @@
 #include <vector>
 
 
+class Game;
+
 class TextObserver : public Observer {
     Game *trackGame;
     public:
