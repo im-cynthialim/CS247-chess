@@ -9,17 +9,19 @@ using namespace std;
 class Computer : public Player 
 {
 
+    //helper bois
+    vector<Move> findAllMovesICanMake(vector<vector<Piece*>> board);
+    vector<Move> findAllMovesOppCanMake(vector<vector<Piece*>> board);
+
     protected: 
     Computer(Colour colour, bool canCastle) : Player(colour, canCastle) {}
 
     public:
         
-        vector<Move> findChecks(vector<vector<Piece>>);
-        vector<Move> findCapture(vector<vector<Piece>>);
-        vector<Move> avoidCaptures(vector<vector<Piece>>);
-        virtual Move chooseMove(vector<vector<Piece>>) = 0;
-
-    
+        vector<Move> findChecks(vector<vector<Piece*>> board);
+        vector<Move> findCaptures(vector<vector<Piece*>> board);
+        vector<Move> avoidCaptures(vector<vector<Piece*>> board);
+        virtual Move chooseMove(vector<vector<Piece*>>) = 0;
 };
 
 #endif
