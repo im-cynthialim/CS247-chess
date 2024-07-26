@@ -10,18 +10,16 @@ class Computer : public Player
 {
 
     //helper bois
-    // vector<Move> findAllMovesICanMake(vector<vector<Piece*>> board);
-    vector<Move> findAllMovesOppCanMake(vector<vector<Piece*>> board);
+    vector<Move> findAllMovesOppCanMake(const vector<vector<Piece*>>& board);
 
     protected: 
     Computer(Colour colour) : Player(colour) {}
 
     public:
-        
-        vector<Move> findChecks(vector<vector<Piece*>> board);
-        vector<Move> findCaptures(vector<vector<Piece*>> board);
-        vector<Move> avoidCaptures(vector<vector<Piece*>> board);
-        virtual Move chooseMove(vector<vector<Piece*>>) = 0;
+        vector<Move> findChecks(const vector<vector<Piece*>>& board);
+        vector<Move> findCaptures(const vector<vector<Piece*>>& board);
+        vector<Move> avoidCaptures(const vector<vector<Piece*>>& board);
+        virtual Move chooseMove(const vector<vector<Piece*>>& board) = 0;
 };
 
 #endif

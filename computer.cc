@@ -2,7 +2,7 @@
 #include "player.h"
 #include "computer.h"
 
-        vector<Move> Computer::findAllMovesOppCanMake(vector<vector<Piece*>> board) {
+        vector<Move> Computer::findAllMovesOppCanMake(const vector<vector<Piece*>>& board) {
             vector<Move> allMovesOppCanMake = {};
             for (size_t row = 0; row < board.size(); ++row) {
                 for (size_t col = 0; col < board[row].size(); ++col) {
@@ -15,11 +15,11 @@
             }
         }
 
-        vector<Move> Computer::findChecks(vector<vector<Piece*>> board) {
+        vector<Move> Computer::findChecks(const vector<vector<Piece*>>& board) {
             //find all of the moves I can make that will put their king in check 
-            char otherKing = 'k';
+            char otherKing = 'K';
             if (colour == WHITE) {
-                otherKing = 'K';
+                otherKing = 'k';
             }
 
             int otherKingPosX;
@@ -34,20 +34,37 @@
                     if(piece != nullptr)  {
                         if(piece->getPieceType() == otherKing) {
                             otherKingPosX = row;
-                            otherKingPosY = row;
+                            otherKingPosY = col;
                         }
                     }
                 }
             }
 
+            //step 2: For each of my possible moves, find whether the other king is in check from this move
+            //for each of my PIECES, see if it can reach the king
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
-            //step 2: For each of my possible moves, find whether from there it can reach the king 
             for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
-                vector<Move> movesFromThisMove = board[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]->listMoves(board, allMovesICanMake[i].getToX(), allMovesICanMake[i].getToY());
-                for (size_t j = 0; j < movesFromThisMove.size(); ++j) {
-                    if(movesFromThisMove[j].getToX() == otherKingPosX && movesFromThisMove[j].getToY() == otherKingPosY) {
-                        allCheckMoves.push_back(allMovesICanMake[i]);
-                        j = movesFromThisMove.size(); //end the for loop
+
+                //simulate the board if this move was made 
+                std::vector<std::vector<Piece*>> boardCopy = board; 
+                boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]; //simulate moving the piece over
+
+                for (size_t row = 0; row < boardCopy.size(); ++row) {
+                    for (size_t col = 0; col < boardCopy[row].size(); ++col) {
+                        Piece* piece = boardCopy[row][col];
+                        if(piece != nullptr && piece->getColour() == this->colour) {
+                            //find all possible moves of this piece NOW that the move was simulated
+                            vector<Move> possibleMoves = boardCopy[row][col]->listMoves(boardCopy, row, col);
+                            for (size_t j = 0; j < possibleMoves.size(); ++j) {
+                                if(possibleMoves[j].getToX() == otherKingPosX && possibleMoves[j].getToY() == otherKingPosY) {
+                                    allCheckMoves.push_back(allMovesICanMake[i]);
+                                    j = possibleMoves.size();
+                                    col = boardCopy[row].size();
+                                    row = boardCopy.size();
+                                    //this move has been added. no need to keep checking if we should add it
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -55,7 +72,7 @@
             return allCheckMoves;
         }
 
-         vector<Move> Computer::findCaptures(vector<vector<Piece*>> board) {
+         vector<Move> Computer::findCaptures(vector<vector<Piece*>>& board) {
             vector<Move> allfindCaptureMoves = {};
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             if(colour == WHITE) {
@@ -67,7 +84,7 @@
             }
         }
 
-        vector<Move> Computer::avoidCaptures(vector<vector<Piece*>> board) {
+        vector<Move> Computer::avoidCaptures(vector<vector<Piece*>>& board) {
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             vector<Move> allMovesOppPlayer = findAllMovesOppCanMake(board);
 
