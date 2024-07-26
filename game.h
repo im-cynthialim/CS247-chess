@@ -32,12 +32,12 @@ class Game {
     public:
         string status;
 
-        void makeMove();
-        void getState(int, int);
-        void render();
-        void resign();
+        // void makeMove();
+        // void getState(int, int);
+        // void render();
+        // void resign();
 
-        void resetGame();
+        // void resetGame();
         bool gameCreatedViaSetup = false;
 
         //default constructor 
@@ -58,28 +58,28 @@ class Game {
 
         void addPlayersToGame(const string& whiteType, const string& blackType) {
             if (whiteType == "human") {
-                white = new Human(WHITE, true);
+                white = new Human(WHITE);
             }
             else if (whiteType == "computer1") {
-                white = new ComputerOne(WHITE, true);
+                white = new ComputerOne(WHITE);
             }
             else if (whiteType == "computer2") {
-                white = new ComputerTwo(WHITE, true);
+                white = new ComputerTwo(WHITE);
             }
             else if (whiteType == "computer3") {
-                white = new ComputerThree(WHITE, true);
+                white = new ComputerThree(WHITE);
             }
             if (blackType == "human") {
-                black = new Human(BLACK, true);
+                black = new Human(BLACK);
             }
             else if (blackType == "computer1") {
-                black = new ComputerOne(BLACK, true);
+                black = new ComputerOne(BLACK);
             }
             else if (blackType == "computer2") {
-                black = new ComputerTwo(BLACK, true);
+                black = new ComputerTwo(BLACK);
             }
             else if (blackType == "computer3") {
-                black = new ComputerThree(BLACK, true);
+                black = new ComputerThree(BLACK);
             }
         }
 

@@ -12,12 +12,11 @@ class Player
 {
     protected: 
         Colour colour; 
-        bool canCastle;
-        Player (Colour colour, bool canCastle);
-
+        bool canCastle = false;
+        Player (Colour colour) : colour{colour} {};
     public:
-        vector<Move> findAllMoves (vector<vector<Piece>>);
-        virtual Move chooseMove(vector<vector<Piece>>) = 0;
+        vector<Move> findAllMoves (vector<vector<Piece*>>);
+        // virtual Move chooseMove(vector<vector<Piece*>>) = 0;
 };
 
 

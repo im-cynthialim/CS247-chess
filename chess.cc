@@ -38,26 +38,26 @@ int main () {
         }
         
         
-        else if (command == "move") {
-            game->makeMove();
+        // else if (command == "move") {
+        //     game->makeMove();
 
-            if(game->status == "WhiteWon") {
-                whiteScore++;
-                //blah blah get status and update score 
+        //     if(game->status == "WhiteWon") {
+        //         whiteScore++;
+        //         //blah blah get status and update score 
 
-                //this game is done!
-                delete game;
-                game = new Game(); //create a fresh game and the delete the old one
-            }
+        //         //this game is done!
+        //         delete game;
+        //         game = new Game(); //create a fresh game and the delete the old one
+        //     }
 
-        } else if (command == "resign") {
-            if (game) {
-                // Handle resign command
-                game->resign();
-            } else {
-                std::cout << "No game in progress.\n";
-            }
-        } 
+        // } else if (command == "resign") {
+        //     if (game) {
+        //         // Handle resign command
+        //         game->resign();
+        //     } else {
+        //         std::cout << "No game in progress.\n";
+        //     }
+        // } 
     }
 
 }

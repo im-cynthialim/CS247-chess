@@ -14,14 +14,14 @@ class Computer : public Player
     vector<Move> findAllMovesOppCanMake(vector<vector<Piece*>> board);
 
     protected: 
-    Computer(Colour colour, bool canCastle) : Player(colour, canCastle) {}
+    Computer(Colour colour) : Player(colour) {}
 
     public:
         
         vector<Move> findChecks(vector<vector<Piece*>> board);
         vector<Move> findCaptures(vector<vector<Piece*>> board);
         vector<Move> avoidCaptures(vector<vector<Piece*>> board);
-        virtual Move chooseMove(vector<vector<Piece*>>) = 0;
+        // virtual Move chooseMove(vector<vector<Piece*>>) = 0;
 };
 
 #endif
