@@ -35,6 +35,7 @@ void TextObserver::notify() {
     }
     cout << "\n";
     cout << "  abcdefgh" << "\n";
+    cout << "\n";
 }
 
 TextObserver::~TextObserver() {}
