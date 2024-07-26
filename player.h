@@ -15,8 +15,23 @@ class Player
         bool canCastle = false;
         Player (Colour colour) : colour{colour} {};
     public:
-        vector<Move> findAllMoves (vector<vector<Piece*>>);
-        // virtual Move chooseMove(vector<vector<Piece*>>) = 0;
+        vector<Move> findAllMovesICanMake (vector<vector<Piece*>> board) {
+            vector<Move> allMovesICanMake = {};
+            for (size_t row = 0; row < board.size(); ++row) {
+                for (size_t col = 0; col < board[row].size(); ++col) {
+                    Piece* piece = board[row][col];
+                    if(piece != nullptr && colour == piece->getColour())  {
+                        std::vector<Move> additionalMoves = piece->listMoves(board, row, col);
+                        allMovesICanMake.insert(allMovesICanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
+                    }
+                }
+            }
+        }
+        virtual Move chooseMove(vector<vector<Piece*>>) = 0;
+        
+        Colour getColour() {
+            return colour;
+        }
 };
 
 

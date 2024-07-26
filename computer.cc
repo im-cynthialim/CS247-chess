@@ -1,19 +1,6 @@
 #include <vector>
 #include "player.h"
 #include "computer.h"
-        
-        vector<Move> Computer::findAllMovesICanMake(vector<vector<Piece*>> board) {
-            vector<Move> allMovesICanMake = {};
-            for (size_t row = 0; row < board.size(); ++row) {
-                for (size_t col = 0; col < board[row].size(); ++col) {
-                    Piece* piece = board[row][col];
-                    if(piece != nullptr && colour == piece->getColour())  {
-                        std::vector<Move> additionalMoves = piece->listMoves(board, row, col);
-                        allMovesICanMake.insert(allMovesICanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
-                    }
-                }
-            }
-        }
 
         vector<Move> Computer::findAllMovesOppCanMake(vector<vector<Piece*>> board) {
             vector<Move> allMovesOppCanMake = {};
