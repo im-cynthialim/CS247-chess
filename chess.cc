@@ -2,9 +2,9 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "Game.h"
-#include "Player.h"
-#include "Piece.h"
+#include "game.h"
+#include "player.h"
+#include "piece.h"
 #include "textobserver.h"
 
 
@@ -29,12 +29,18 @@ int main () {
                 game = new Game(); //create a fresh game and the delete the old one
             }
 
-
+            string whitePlayer, blackPlayer;
+            cin >> whitePlayer >> blackPlayer;
             // Extract player types and start a new game
-            std::string whitePlayer = command.substr(5, command.find(" ", 5) - 5);
-            std::string blackPlayer = command.substr(command.find(" ", 5) + 1);
+            // std::string whitePlayer = command.substr(5, command.find(" ", 5) - 5);
+            // std::string blackPlayer = command.substr(command.find(" ", 5) + 1);
             game->setUpGame(whitePlayer, blackPlayer);
+            game->notifyObservers();
         }
+
+        
+    
+        // testGame->notifyObservers();
 
         else if (command == "setup") {
             game->setup();
