@@ -1,16 +1,17 @@
-#ifndef PAWN_H
-#define PAWN_H
+#ifndef QUEEN_H
+#define QUEEN_H
 
 #include <vector>
 #include "piece.h"
-
 using namespace std;
 
-class Pawn : public Piece {
+class Queen : public Piece {
+    
     vector<Move> possibleMoves(vector<vector<Piece*>>, int, int) override;
     public:
-        Pawn(Colour c, char pieceType); 
-        virtual ~Pawn();
+        Queen(Colour c, char pieceType);
+        virtual ~Queen();
 };
+
 
 #endif
