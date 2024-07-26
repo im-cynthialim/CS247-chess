@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Player.h"
 #include "Piece.h"
+#include "textobserver.h"
 
 
 
@@ -12,12 +13,14 @@ int main () {
     int whiteScore = 0;
     int blackScore = 0;
 
-    Game* game = new Game();
+    // Game* game = new Game();
+    Game *game = new Game;
+    new TextObserver(game);
+    game->notifyObservers();
+
     std::string command;
 
     while (std::cin >> command) {
-        std::getline(std::cin, command);
-
         // Parse the command and execute the appropriate action
         if (command == "game") {
 
