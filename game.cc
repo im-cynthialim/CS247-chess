@@ -5,4 +5,4 @@ char Game::getState(int row, int col) const {
         return this->board.at(row).at(col)->getPieceType();
     }
     return '$';
- }
+}
