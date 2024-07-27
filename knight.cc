@@ -74,7 +74,7 @@ vector<Move> Knight::possibleMoves(vector<vector<Piece*>> &board, int row, int c
 
     while (validateMove < potentialMoves.size()) {
         simulateBoard[initX][initY] = nullptr;
-        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put rook in new potential place
+        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put knight in new potential place
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {

@@ -17,72 +17,68 @@ vector<Move> Queen::lineOfSight(vector<vector<Piece*>> &board, int curI, int cur
 
     int saveCurI = curI;
     int saveCurJ = curJ;
-    int checkNextI = curI;
-    int checkNextJ = curJ;
+    int checkNextI = curI - 1;
+    int checkNextJ = curJ - 1;
 
     // check white bishop, 3 cases, diagonal blank space, diagonal piece in its path, out of bounds diagonal
 
         // check diagonal left moves for white bishop, while loop to make sure its in bounds
         while (checkNextI < board.size() || checkNextJ < board.size()) {
-            checkNextI -= 1;
-            checkNextJ -= 1;
 
             // check if left diagonal is empty
             if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
-                moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
+                moves.push_back(Move(curI, curJ, checkNextI, checkNextJ));
                 // set (curI and curJ) = (checkNextI, checkNextJ)
-                saveCurI = checkNextI;
-                saveCurJ = checkNextJ;
             } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 // check if left diagonal contains a piece in its path 
                 // we can move to the spot with a piece, but stop checking spots after cause we cannot reach there
-                moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
+                moves.push_back(Move(curI, curJ, checkNextI, checkNextJ));
                 break;
             }
+            --checkNextI;
+            --checkNextJ;
         }
 
         // reset checkNextI and checkNextJ for right diagonal checking
         saveCurI = curI;
         saveCurJ = curJ;
-        checkNextI = curI;
-        checkNextJ = curJ;
+        checkNextI = curI - 1;
+        checkNextJ = curJ + 1;
 
         // check diagonal right moves
 
         while (checkNextI < board.size() || checkNextJ < board.size()) {
-            checkNextI -= 1;
-            checkNextJ += 1;
 
             if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
 
-                saveCurI = checkNextI;
-                saveCurJ = checkNextJ;
+                // saveCurI = checkNextI;
+                // saveCurJ = checkNextJ;
             } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
                 break;
             }
+            --checkNextI;
+            ++checkNextJ;
         }
     
         saveCurI = curI;
         saveCurJ = curJ;
-        checkNextI = curI;
-        checkNextJ = curJ;
+        checkNextI = curI + 1;
+        checkNextJ = curJ + 1;
 
 
         // check diagonal left moves for black bishop, while loop to make sure its in bounds
         while (checkNextI < board.size() || checkNextJ < board.size()) {
-            checkNextI += 1;
-            checkNextJ += 1;
 
             // check if left diagonal is empty
             if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
                 // set (curI and curJ) = (checkNextI, checkNextJ)
-                saveCurI = checkNextI;
-                saveCurJ = checkNextJ;
+                // saveCurI = checkNextI;
+                // saveCurJ = checkNextJ;
             } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 // check if left diagonal contains a piece in its path 
@@ -90,30 +86,32 @@ vector<Move> Queen::lineOfSight(vector<vector<Piece*>> &board, int curI, int cur
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
                 break;
             }
+            ++checkNextI;
+            ++checkNextJ;
         }
 
         // reset checkNextI and checkNextJ for right diagonal checking
         saveCurI = curI;
         saveCurJ = curJ;
-        checkNextI = curI;
-        checkNextJ = curJ;
+        checkNextI = curI + 1;
+        checkNextJ = curJ - 1;
 
         // check diagonal right moves
 
         while (checkNextI < board.size() || checkNextJ < board.size()) {
-            checkNextI += 1;
-            checkNextJ -= 1;
 
             if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
 
-                saveCurI = checkNextI;
-                saveCurJ = checkNextJ;
+                // saveCurI = checkNextI;
+                // saveCurJ = checkNextJ;
             } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
                 break;
             }
+            ++checkNextI;
+            --checkNextJ;
         } 
 
     // execute rook hor + vert
@@ -218,7 +216,7 @@ vector<Move> Queen::possibleMoves(vector<vector<Piece*>> &board, int row, int co
 
     while (validateMove < potentialMoves.size()) {
         simulateBoard[initX][initY] = nullptr;
-        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put rook in new potential place
+        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put queen in new potential place
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
