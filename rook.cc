@@ -83,12 +83,24 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
-    // call find king to find MY king's position
-    int kingX = 3;
-    int kingY = 6;
     bool inCheck = false;
     int initX = row;
     int initY = col;
+    int kingX, kingY;
+
+    // find curPlayer king's position
+
+    for (size_t Krow = 0; Krow < board.size(); ++Krow) {
+        for (size_t Kcol = 0; Kcol < board[row].size(); ++Kcol) {
+            if (board[Krow][Kcol] != nullptr && dynamic_cast<King*>(board.at(Krow).at(Kcol)) && board[Krow][Kcol]->getColour() == this->getColour()) { 
+                kingX = Krow;
+                kingY = Kcol;
+                break;
+                }
+        }
+    }
+
+
 
     // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
     int validateMove = 0; // index to iterate through generalMoves
@@ -120,6 +132,7 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col
         initY = potentialMoves[validateMove].getToY();
         ++validateMove;
     }
+
     return validMoves;
 }
 
