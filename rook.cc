@@ -60,7 +60,6 @@ vector<Move> Rook::lineOfSight(vector<vector<Piece*>> &board, int row, int col) 
     }
 
     //check top/bottom moves (depends on colour)   
-
     j = col - 1;
 
     while (j >= 0) { 
@@ -85,7 +84,6 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
     // call find king to find MY king's position
-
     int kingX = 3;
     int kingY = 6;
     bool inCheck = false;
@@ -93,39 +91,18 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col
     int initY = col;
 
     // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
-
     int validateMove = 0; // index to iterate through generalMoves
     
     vector<vector<Piece*>> simulateBoard = board;
-    // delete simulateBoard[row][col];
-    // simulateBoard[row][col] = nullptr;
-    // simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()]; // put rook in new potential place
 
     while (validateMove < potentialMoves.size()) {
         simulateBoard[initX][initY] = nullptr;
         simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put rook in new potential place
-
-        for (int i =0; i < simulateBoard.size(); ++i) {
-
-            // for (int j = 0;j < 8;++j) {
-            //     if (simulateBoard[i][j] != nullptr)
-            //         cout << simulateBoard[i][j]->getPieceType();
-            //     else {cout << "_";}
-                
-            // }
-            // cout << "\n";
-        }
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
 
                     vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
-
-                    // cout << "--------ENEMY MOVES-------------" << "\n";
-                    // for (int rand = 0; rand < enemyMoves.size(); ++rand) {
-                    //     enemyMoves[rand].getFields();
-                    // }
-                    // cout << "--------END ENEMY MOVES-------------" << "\n";
                     Move myKing = {i, j, kingX, kingY};
                     auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
                     if (it != enemyMoves.end()) { // enemy piece checks my king
