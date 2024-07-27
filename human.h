@@ -10,7 +10,7 @@ class Human : public Player
 {
     public:
         Human(Colour colour) : Player(colour) {}
-        Move chooseMove(vector<vector<Piece*>> board) override {
+        Move chooseMove(const vector<vector<Piece*>>& board) override {
             char fromCol;
             char fromRow;
             char toCol;

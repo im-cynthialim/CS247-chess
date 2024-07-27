@@ -9,6 +9,53 @@ using namespace std;
 // construct the pawn
 Pawn::Pawn(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
+// used to check if whitePawns are in one of the fixed located spots (6,0), (6,1) ... (6,7)
+bool Pawn::getWhiteSpots(int curI, int curJ) {
+    if (curI == 6 && curJ == 0) {
+        return true;
+    } else if (curI == 6 && curJ == 1) {
+        return true;
+    } else if (curI == 6 && curJ == 2) {
+        return true;
+    } else if (curI == 6 && curJ == 3) {
+        return true;
+    } else if (curI == 6 && curJ == 4) {
+        return true;
+    } else if (curI == 6 && curJ == 5) {
+        return true;
+    } else if (curI == 6 && curJ == 6) {
+        return true;
+    } else if (curI == 6 && curJ == 7) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// used to check if blackPawns are in one of the fixed located spots (1,0), (1,1) ... (1,7)
+bool Pawn::getBlackSpots(int curI, int curJ) {
+    if (curI == 1 && curJ == 0) {
+        return true;
+    } else if (curI == 1 && curJ == 1) {
+        return true;
+    } else if (curI == 1 && curJ == 2) {
+        return true;
+    } else if (curI == 1 && curJ == 3) {
+        return true;
+    } else if (curI == 1 && curJ == 4) {
+        return true;
+    } else if (curI == 1 && curJ == 5) {
+        return true;
+    } else if (curI == 1 && curJ == 6) {
+        return true;
+    } else if (curI == 1 && curJ == 7) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 vector<Move> Pawn::possibleMoves(vector<vector<Piece*>> board, int curI, int curJ) {
     // return an array of moves for the pawn
     vector<Move> moves;
@@ -40,6 +87,16 @@ vector<Move> Pawn::possibleMoves(vector<vector<Piece*>> board, int curI, int cur
         && board[leftAttackI][leftAttackJ]->getColour() == Colour::BLACK) {
             moves.push_back(Move(curI, curJ, leftAttackI, leftAttackJ));
         }
+
+        // check if a pawn can move upwards twice
+        // check to see if curI, curJ is a pawn and check to see if its in a specific spot
+        // no need to check if out of bounds because the jump two up can never go out of bounds
+        int moveTwoUpI = curI-2;
+        bool twoUp = getWhiteSpots(curI, curJ);
+        if (board[curI][curJ] == this && twoUp) {
+            moves.push_back(Move(curI, curJ, moveTwoUpI, curJ));
+
+        }
     }
 
     // black pawn - moves down board
@@ -67,6 +124,12 @@ vector<Move> Pawn::possibleMoves(vector<vector<Piece*>> board, int curI, int cur
         if (leftAttackI < board.size() && leftAttackJ < 8 && board[leftAttackI][leftAttackJ] != nullptr
         && board[leftAttackI][leftAttackJ]->getColour() == Colour::WHITE) {
             moves.push_back(Move(curI, curJ, leftAttackI, leftAttackJ));
+        }
+
+        int moveTwoUp = curI+2;
+        bool twoUp = getBlackSpots(curI, curJ);
+        if (board[curI][curJ] == this && twoUp) {
+            moves.push_back(Move(curI, curJ, moveTwoUp, curJ));
         }
     }  
 
