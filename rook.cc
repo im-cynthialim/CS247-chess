@@ -103,22 +103,32 @@ vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col
 
     while (validateMove < potentialMoves.size()) {
         simulateBoard[initX][initY] = nullptr;
-        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()]; // put rook in new potential place
+        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put rook in new potential place
+
+        for (int i =0; i < simulateBoard.size(); ++i) {
+
+            // for (int j = 0;j < 8;++j) {
+            //     if (simulateBoard[i][j] != nullptr)
+            //         cout << simulateBoard[i][j]->getPieceType();
+            //     else {cout << "_";}
+                
+            // }
+            // cout << "\n";
+        }
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
 
-                    vector<Move> enemyMoves = lineOfSight(simulateBoard, i, j);
+                    vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
 
-                    cout << "--------ENEMY MOVES-------------" << "\n";
-                    for (int i = 0; i < enemyMoves.size(); i++) {
-                        enemyMoves[i].getFields();
-                    }
-                    cout << "--------END ENEMY MOVES-------------" << "\n";
+                    // cout << "--------ENEMY MOVES-------------" << "\n";
+                    // for (int rand = 0; rand < enemyMoves.size(); ++rand) {
+                    //     enemyMoves[rand].getFields();
+                    // }
+                    // cout << "--------END ENEMY MOVES-------------" << "\n";
                     Move myKing = {i, j, kingX, kingY};
                     auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
                     if (it != enemyMoves.end()) { // enemy piece checks my king
-                        cout << "check";
                         inCheck = true;
                         break; // general move is invalid
                     }
