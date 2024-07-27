@@ -8,5 +8,10 @@ void Move::getFields() {
     cout <<  "from: " << this->fromX << ", "  << this->fromY << "\n";
     cout <<  "to: " << this->toX << ", "  << this->toY << "\n";
 }
+
+bool Move::operator==(const Move &other) const{
+    return fromX == other.fromX && fromY == other.fromY && toX == other.toX && toY == other.toY;
+}
+
 Move::~Move() {};
 

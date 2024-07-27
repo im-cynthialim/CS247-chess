@@ -1,7 +1,6 @@
 #include <vector>
 #include "queen.h"
 #include "enums.h"
-#include "game.h"
 #include "move.h"
 #include "piece.h"
 
@@ -10,7 +9,8 @@ using namespace std;
 
 Queen::Queen(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
-vector<Move> Queen::possibleMoves(vector<vector<Piece*>> board, int curI, int curJ) {
+vector<Move> Queen::possibleMoves(vector<vector<Piece*>> &board, int curI, int curJ) {};
+vector<Move> Queen::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) { 
     vector<Move> moves;
     // queen = bishop + rook
     // execute bishop diagonals
@@ -119,8 +119,8 @@ vector<Move> Queen::possibleMoves(vector<vector<Piece*>> board, int curI, int cu
     // execute rook hor + vert
 
     int i = curI + 1;
-    //check horizontal moves 
-    while (i < 8) { // moves on right side -->
+    //vertical
+    while (i < 8) { // move down
         if(board.at(i).at(curJ) == nullptr) { // empty square
             moves.push_back(Move{curI, curJ, i, curJ});
         }
@@ -134,7 +134,7 @@ vector<Move> Queen::possibleMoves(vector<vector<Piece*>> board, int curI, int cu
         ++i;
     }
 
-    //check left side <--- 
+    // move up 
     i = curI - 1;
 
     while (i >= 0) { 
@@ -151,7 +151,7 @@ vector<Move> Queen::possibleMoves(vector<vector<Piece*>> board, int curI, int cu
         --i;
     }
 
-    //check vertical moves
+    //check horizontal moves
     int j = curJ + 1;
 
     while (j < 8) { //check top/bottom moves (depends on colour)

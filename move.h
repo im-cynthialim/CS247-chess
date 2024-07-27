@@ -25,6 +25,8 @@ class Move {
         int getToY() {
             return toY;
         }
+
+        bool operator==(const Move& other) const; 
 };
 
 #endif

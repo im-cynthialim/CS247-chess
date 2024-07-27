@@ -20,8 +20,13 @@ Colour Piece::getColour() {
     return colour;
 }
 
-vector<Move> Piece::listMoves (vector<vector<Piece*>> board, int row, int col) {
+vector<Move> Piece::getPossibleMoves ( vector<vector<Piece*>> &board, int row, int col)  {
     return this->possibleMoves(board, row, col);
 }
+
+vector<Move> Piece::getLineOfSightMoves ( vector<vector<Piece*>> &board, int row, int col)  {
+    return this->lineOfSight(board, row, col);
+}
+
 
 Piece::~Piece() {};

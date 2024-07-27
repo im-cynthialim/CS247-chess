@@ -1,6 +1,5 @@
 #include <vector>
 #include "enums.h"
-#include "game.h"
 #include "move.h"
 #include "piece.h"
 #include "king.h"
@@ -9,7 +8,10 @@ using namespace std;
 // construct King object
 King::King(Colour c, char pieceType): Piece{c, pieceType} {}
 
-vector<Move> King::possibleMoves(vector<vector<Piece*>> board, int curI, int curJ) {
+
+vector<Move> King::possibleMoves(vector<vector<Piece*>> &board, int curI, int curJ) {};
+vector<Move> King::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) {
+
     vector<Move> moves;
     // check all 8 scenarios
     int saveCurI = curI;
