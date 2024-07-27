@@ -6,8 +6,8 @@
 using namespace std;
 
 class Bishop : public Piece {
-    
-    vector<Move> possibleMoves(vector<vector<Piece*>>, int, int) override;
+    vector<Move> lineOfSight(vector<vector<Piece*>> &, int, int) override;
+    vector<Move> possibleMoves(vector<vector<Piece*>> &, int, int) override;
     public:
         Bishop(Colour c, char pieceType);
         virtual ~Bishop();
