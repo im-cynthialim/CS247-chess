@@ -31,15 +31,46 @@ class Game : public Subject
     // vector<vector<Piece*>> board;
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
 
-    vector<Piece> deadPieces;
+    // vector<Piece> deadPieces;
 
     Player *playerTurn;
-    vector<Move> pastMoves;
+    // vector<Move> pastMoves;
 
 public:
     string status;
 
-    // void makeMove();
+
+
+    void makeMove() {
+            Move moveToPlay = playerTurn->chooseMove(board);
+            //make the move on the board
+            if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
+                delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+            }
+            board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+
+            //check if the move results in a checkMate for the other player
+            if(didMyMoveCreateCheckMate) {
+                //...
+            }
+            // if(didMyMoveCreateStaleMate) {
+            //     //...
+            // }
+
+            //change the playerTurn
+            if(playerTurn->getColour() == WHITE) {
+                playerTurn = black;
+            } else {
+                playerTurn = white;
+            }
+        }
+
+        bool didMyMoveCreateCheckMate(Move moveIPlayed) {
+            //step 1: is the king in check? 
+            //step 2: the my opponent have any possible moves? 
+        }
+
+
     char getState(int row, int col) const override;
     // void render();
     // void resign();
