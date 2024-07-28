@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include "enums.h"
 #include "move.h"
 #include "king.h"

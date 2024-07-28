@@ -3,6 +3,7 @@
 #include "move.h"
 #include "piece.h"
 #include "king.h"
+#include <algorithm>
 #include <iostream>
 using namespace std;
 

@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include "bishop.h"
 #include "enums.h"
 #include "king.h"

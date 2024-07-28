@@ -3,6 +3,7 @@
 #include "piece.h"
 #include <iostream>
 #include <memory>
+#include <algorithm>
 
 Rook::Rook(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 
