@@ -5,6 +5,7 @@
 #include "enums.h"
 #include "piece.h"
 #include "move.h"
+#include <iostream>
 
 using namespace std;
 
@@ -35,11 +36,13 @@ class Player
                 for (size_t col = 0; col < board[row].size(); ++col) {
                     Piece* piece = board[row][col];
                     if(piece != nullptr && colour == piece->getColour())  {
-                        std::vector<Move> additionalMoves = piece->getPossibleMoves(board, row, col);
+                        cout<<piece->getColour();
+                        vector<Move> additionalMoves = piece->getPossibleMoves(board, row, col);
                         allMovesICanMake.insert(allMovesICanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
                     }
                 }
             }
+            return allMovesICanMake;
         }
 
         virtual Move chooseMove(const vector<vector<Piece*>>& board) = 0;

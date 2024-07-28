@@ -1,0 +1,1 @@
+graphicsobserver.o: graphicsobserver.cc

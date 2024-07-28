@@ -1,6 +1,7 @@
 #include <vector>
 #include "enums.h"
 #include "piece.h"
+#include <iostream>
 
 
 // virtual vector<Move> possibleMoves(vector<vector<Piece>>, int, int, int, int) = 0;

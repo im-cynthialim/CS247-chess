@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "player.h"
+#include <iostream>
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class Human : public Player
     public:
         Human(Colour colour) : Player(colour) {}
         Move chooseMove(const vector<vector<Piece*>>& board) override {
+            std::cout << "help";
             char fromCol;
             char fromRow;
             char toCol;
@@ -25,27 +27,31 @@ class Human : public Player
 
                 Move myMove = Move{fromRowLoc, fromColLoc, toRowLoc, toColLoc};
 
+                cout<<"reached";
                 vector<Move> allValidMoves = findAllMovesICanMake(board);
-                bool isValidMove = false;
-                for (size_t i = 0; i < allValidMoves.size(); ++i) {
-                    if (
-                        myMove.getFromX() == allValidMoves[i].getFromX() &&
-                        myMove.getFromY() == allValidMoves[i].getFromY() &&
-                        myMove.getToX() == allValidMoves[i].getToX() &&
-                        myMove.getToY() == allValidMoves[i].getToY()
-                    ) {
-                        i = allValidMoves.size();
-                        isValidMove = true;
-                    }
-                }
+                cout << allValidMoves.size();
+                
+                // bool isValidMove = false;
+                // for (size_t i = 0; i < allValidMoves.size(); ++i) {
+                //     if (
+                //         myMove.getFromX() == allValidMoves[i].getFromX() &&
+                //         myMove.getFromY() == allValidMoves[i].getFromY() &&
+                //         myMove.getToX() == allValidMoves[i].getToX() &&
+                //         myMove.getToY() == allValidMoves[i].getToY()
+                //     ) {
+                //         i = allValidMoves.size();
+                //         isValidMove = true;
+                //     }
+                // }
 
-                if(isValidMove) {
+                // if(isValidMove) {
                     return myMove;
-                } else {
-                    cout << "You are not allowed to make that move. Enter a different one.";
-                }
+                // } else {
+                //     cout << "You are not allowed to make that move. Enter a different one.";
+                // }
             }
         }
+
 };
 
 
