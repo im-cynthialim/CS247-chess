@@ -21,17 +21,20 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
     // check white bishop, 3 cases, diagonal blank space, diagonal piece in its path, out of bounds diagonal
 
         // check diagonal left moves for white bishop, while loop to make sure its in bounds
-        while (checkNextI < board.size() || checkNextJ < board.size()) {
+        while (checkNextI < board.size() && checkNextI >= 0|| checkNextJ < board.size() && checkNextJ >= 0) {
 
             // check if left diagonal is empty
-            if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
+            if (checkNextI < board.size() && checkNextI >= 0 && checkNextJ >= 0 && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(curI, curJ, checkNextI, checkNextJ));
                 // set (curI and curJ) = (checkNextI, checkNextJ)
-            } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
+            } else if (checkNextI < board.size() && checkNextI >= 0 && checkNextJ >= 0 && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 // check if left diagonal contains a piece in its path 
                 // we can move to the spot with a piece, but stop checking spots after cause we cannot reach there
                 moves.push_back(Move(curI, curJ, checkNextI, checkNextJ));
+                break;
+            }
+               else {
                 break;
             }
             --checkNextI;
@@ -46,21 +49,25 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
 
         // check diagonal right moves
 
-        while (checkNextI < board.size() || checkNextJ < board.size()) {
+        while (checkNextI < board.size() && checkNextI >= 0 || checkNextJ < board.size()) {
 
-            if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
+            if (checkNextI < board.size() && checkNextI >= 0 && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
 
                 // saveCurI = checkNextI;
                 // saveCurJ = checkNextJ;
-            } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
+            } else if (checkNextI < board.size() && checkNextI >= 0 && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
+                break;
+            }
+               else {
                 break;
             }
             --checkNextI;
             ++checkNextJ;   
         }
+        
     
         saveCurI = curI;
         saveCurJ = curJ;
@@ -84,6 +91,9 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
                 break;
             }
+               else {
+                break;
+            }
             ++checkNextI;
             ++checkNextJ;
         }
@@ -96,16 +106,19 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
 
         // check diagonal right moves
 
-        while (checkNextI < board.size() || checkNextJ < board.size()) {
+        while (checkNextI < board.size() || checkNextJ < board.size() && checkNextJ >= 0) {
 
-            if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] == nullptr) {
+            if (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0 && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
 
                 // saveCurI = checkNextI;
                 // saveCurJ = checkNextJ;
-            } else if (checkNextI < board.size() && checkNextJ < board.size() && board[checkNextI][checkNextJ] != nullptr
+            } else if (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0 && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move(saveCurI, saveCurJ, checkNextI, checkNextJ));
+                break;
+            }
+               else {
                 break;
             }
             ++checkNextI;
@@ -170,7 +183,5 @@ vector<Move> Bishop::possibleMoves(const vector<vector<Piece*>> &board, int row,
     return validMoves;
 
 }
-
-
 
 Bishop::~Bishop() {}
