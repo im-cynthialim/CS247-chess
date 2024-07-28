@@ -22,7 +22,7 @@ class Player
                 for (size_t col = 0; col < board[row].size(); ++col) {
                     Piece* piece = board[row][col];
                     if(piece != nullptr && colour != piece->getColour())  {
-                        std::vector<Move> additionalMoves = piece->listMoves(board, row, col);
+                        std::vector<Move> additionalMoves = piece->getPossibleMoves(board, row, col);
                         allMovesOppCanMake.insert(allMovesOppCanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
                     }
                 }
@@ -35,7 +35,7 @@ class Player
                 for (size_t col = 0; col < board[row].size(); ++col) {
                     Piece* piece = board[row][col];
                     if(piece != nullptr && colour == piece->getColour())  {
-                        std::vector<Move> additionalMoves = piece->listMoves(board, row, col);
+                        std::vector<Move> additionalMoves = piece->getPossibleMoves(board, row, col);
                         allMovesICanMake.insert(allMovesICanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
                     }
                 }
@@ -43,6 +43,7 @@ class Player
         }
 
         virtual Move chooseMove(const vector<vector<Piece*>>& board) = 0;
+
         vector<Move> findChecks(const vector<vector<Piece*>>& board) {
             //find all of the moves I can make that will put their king in check 
             char otherKing = 'K';

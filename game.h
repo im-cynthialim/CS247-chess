@@ -40,6 +40,7 @@ public:
     string status;
     void makeMove() {
             Move moveToPlay = playerTurn->chooseMove(board);
+
             Colour oppCol = WHITE;
             if(playerTurn->getColour() == WHITE) {
                 oppCol = BLACK;
@@ -55,10 +56,11 @@ public:
             //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
             //find position of opp king
             bool movePutACheck = false;
-            char otherKing = 'K';
-            if (playerTurn->getColour() == WHITE) {
-                otherKing = 'k';
+            char otherKing = 'k';
+            if (oppCol == WHITE) {
+                otherKing = 'K';
             }
+
             int otherKingPosX;
             int otherKingPosY;
             for (size_t row = 0; row < board.size(); ++row) {
@@ -72,6 +74,7 @@ public:
                     }
                 }
             }
+
             for (size_t row = 0; row < board.size(); ++row) {
                 for (size_t col = 0; col < board[row].size(); ++col) {
                     Piece* piece = board[row][col];
@@ -108,11 +111,6 @@ public:
             } else {
                 playerTurn = white;
             }
-        }
-
-        bool didMyMoveCreateCheckMate(Move moveIPlayed) {
-            //step 1: is the king in check? 
-            //step 2: the my opponent have any possible moves? 
         }
 
 
