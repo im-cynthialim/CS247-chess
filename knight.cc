@@ -12,47 +12,46 @@ Knight::Knight(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 vector<Move> Knight::lineOfSight(const vector<vector<Piece*>>& board, int row, int col) {
 
     vector<Move> validMoves {};
-
-    // //counter clockwise motion
-    // //up 2, 1 right - upper bound not added
-    // if (row - 2 >= 0 && col + 1 < 8 && (board.at(row-2).at(col+1) == nullptr || board.at(row-2).at(col+1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row-2, col+1});
-    // }
+    //counter clockwise motion
+    //up 2, 1 right - upper bound not added
+    if (row - 2 >= 0 && col + 1 < 8 && (board.at(row-2).at(col+1) == nullptr || board.at(row-2).at(col+1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row-2, col+1});
+    }
     
-    // //up 1, right 2
-    // if (row - 1 >= 0 && col + 2 < 8 && (board.at(row-1).at(col+2) == nullptr || board.at(row-1).at(col+2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row-1, col+2});
-    // }
+    //up 1, right 2
+    if (row - 1 >= 0 && col + 2 < 8 && (board.at(row-1).at(col+2) == nullptr || board.at(row-1).at(col+2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row-1, col+2});
+    }
 
-    // //down 1, right 2
-    // if (row + 1 < 8 && col + 2 < 8 && (board.at(row+1).at(col+2) == nullptr || board.at(row+1).at(col+2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row+1, col+2});
-    // }
+    //down 1, right 2
+    if (row + 1 < 8 && col + 2 < 8 && (board.at(row+1).at(col+2) == nullptr || board.at(row+1).at(col+2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row+1, col+2});
+    }
 
-    // //down 2, right 1
-    // if (row + 2 < 8 && col + 1 < 8 && (board.at(row+2).at(col+1) == nullptr || board.at(row+2).at(col+1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row+2, col+1});
-    // }
+    //down 2, right 1
+    if (row + 2 < 8 && col + 1 < 8 && (board.at(row+2).at(col+1) == nullptr || board.at(row+2).at(col+1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row+2, col+1});
+    }
 
-    // //down 2, left 1
-    // if (row + 2 < 8 && col - 1 >= 0 && (board.at(row+2).at(col-1) == nullptr || board.at(row+2).at(col-1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row+2, col-1});
-    // }
+    //down 2, left 1
+    if (row + 2 < 8 && col - 1 >= 0 && (board.at(row+2).at(col-1) == nullptr || board.at(row+2).at(col-1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row+2, col-1});
+    }
 
-    // //down 1, left 2
-    // if (row + 1 < 8 && col - 2 >= 0 && (board.at(row+1).at(col-2) == nullptr || board.at(row+1).at(col-2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row+1, col-2});
-    // }
+    //down 1, left 2
+    if (row + 1 < 8 && col - 2 >= 0 && (board.at(row+1).at(col-2) == nullptr || board.at(row+1).at(col-2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row+1, col-2});
+    }
 
-    // //up 1, left 2
-    // if (row - 1 >=0 && col - 2 >= 0 && (board.at(row-1).at(col-2) == nullptr || board.at(row-1).at(col-2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row-1, col-2});
-    // }
+    //up 1, left 2
+    if (row - 1 >=0 && col - 2 >= 0 && (board.at(row-1).at(col-2) == nullptr || board.at(row-1).at(col-2)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row-1, col-2});
+    }
 
-    // //up 2, left 1
-    // if (row - 2 >=0 && col - 1 >= 0 && (board.at(row-2).at(col-1) == nullptr || board.at(row-2).at(col-1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
-    //     validMoves.push_back(Move{row, col, row-2, col-1});
-    // }
+    //up 2, left 1
+    if (row - 2 >=0 && col - 1 >= 0 && (board.at(row-2).at(col-1) == nullptr || board.at(row-2).at(col-1)->getColour() != this->getColour())) { // if valid square + non empty + not same colour
+        validMoves.push_back(Move{row, col, row-2, col-1});
+    }
 
     return validMoves;
 }
@@ -62,11 +61,21 @@ vector<Move> Knight::possibleMoves(const vector<vector<Piece*>> &board, int row,
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
     // call find king to find MY king's position
-    int kingX = 3;
-    int kingY = 6;
     bool inCheck = false;
     int initX = row;
     int initY = col;
+
+    int kingX, kingY;
+    // find curPlayer king's position
+    for (size_t Krow = 0; Krow < board.size(); ++Krow) {
+        for (size_t Kcol = 0; Kcol < board[row].size(); ++Kcol) {
+            if (board[Krow][Kcol] != nullptr && (board.at(Krow).at(Kcol)->getPieceType() == 'k' || board.at(Krow).at(Kcol)->getPieceType() == 'K') && board[Krow][Kcol]->getColour() == this->getColour()) { 
+                kingX = Krow;
+                kingY = Kcol;
+                break;
+            }
+        }
+    }
 
     // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
     int validateMove = 0; // index to iterate through generalMoves
