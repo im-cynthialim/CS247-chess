@@ -8,7 +8,6 @@
 #include "textobserver.h"
 
 
-
 int main () {
     int whiteScore = 0;
     int blackScore = 0;
