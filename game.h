@@ -38,24 +38,69 @@ class Game : public Subject
 
 public:
     string status;
-
-
-
     void makeMove() {
             Move moveToPlay = playerTurn->chooseMove(board);
-            //make the move on the board
+            Colour oppCol = WHITE;
+            if(playerTurn->getColour() == WHITE) {
+                oppCol = BLACK;
+            }
+
+            //STEP 1: make the move on the board
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
             }
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
 
-            //check if the move results in a checkMate for the other player
-            if(didMyMoveCreateCheckMate) {
-                //...
+
+            //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
+            //find position of opp king
+            bool movePutACheck = false;
+            char otherKing = 'K';
+            if (playerTurn->getColour() == WHITE) {
+                otherKing = 'k';
             }
-            // if(didMyMoveCreateStaleMate) {
-            //     //...
-            // }
+            int otherKingPosX;
+            int otherKingPosY;
+            for (size_t row = 0; row < board.size(); ++row) {
+                for (size_t col = 0; col < board[row].size(); ++col) {
+                    Piece* piece = board[row][col];
+                    if(piece != nullptr)  {
+                        if(piece->getPieceType() == otherKing) {
+                            otherKingPosX = row;
+                            otherKingPosY = col;
+                        }
+                    }
+                }
+            }
+            for (size_t row = 0; row < board.size(); ++row) {
+                for (size_t col = 0; col < board[row].size(); ++col) {
+                    Piece* piece = board[row][col];
+                    if(piece != nullptr && piece->getColour() == playerTurn->getColour()) {
+                        //find all LINES OF SIGHT moves of my pieces on the new board
+                        vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);
+                        for (size_t j = 0; j < possibleMoves.size(); ++j) {
+                            if(possibleMoves[j].getToX() == otherKingPosX && possibleMoves[j].getToY() == otherKingPosY) {
+                                movePutACheck = true;
+                                j = possibleMoves.size();
+                                col = board[row].size();
+                                row = board.size();
+                                //we already know this move created a check so end the for loops. 
+                            }
+                        }
+                    }
+                }
+            }
+
+            //does my opponent have any possible moves? 
+            vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
+
+            if(oppMoves.size() == 0 && movePutACheck == true) {
+                cout<<"CheckMate "<<playerTurn->getColour()<<" Wins!";
+            } else if(oppMoves.size() == 0 && movePutACheck == false) {
+                cout<<"Stalement"
+            } else if(oppMoves.size() != 0 && movePutACheck == true) {
+                cout<<oppCol<<" is now in check"
+            }
 
             //change the playerTurn
             if(playerTurn->getColour() == WHITE) {
