@@ -6,3 +6,4 @@ char Game::getState(int row, int col) const {
     }
     return '$';
 }
+

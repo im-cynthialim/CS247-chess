@@ -12,11 +12,10 @@ class Human : public Player
     public:
         Human(Colour colour) : Player(colour) {}
         Move chooseMove(const vector<vector<Piece*>>& board) override {
-            std::cout << "help";
             char fromCol;
-            char fromRow;
+            int fromRow;
             char toCol;
-            char toRow;
+            int toRow;
 
             while(true) {
                 cin >> fromCol >> fromRow >> toCol >> toRow;
@@ -27,29 +26,30 @@ class Human : public Player
 
                 Move myMove = Move{fromRowLoc, fromColLoc, toRowLoc, toColLoc};
 
-                cout<<"reached";
                 vector<Move> allValidMoves = findAllMovesICanMake(board);
-                cout << allValidMoves.size();
+                // cout << allValidMoves.size();
                 
-                // bool isValidMove = false;
-                // for (size_t i = 0; i < allValidMoves.size(); ++i) {
-                //     if (
-                //         myMove.getFromX() == allValidMoves[i].getFromX() &&
-                //         myMove.getFromY() == allValidMoves[i].getFromY() &&
-                //         myMove.getToX() == allValidMoves[i].getToX() &&
-                //         myMove.getToY() == allValidMoves[i].getToY()
-                //     ) {
-                //         i = allValidMoves.size();
-                //         isValidMove = true;
-                //     }
-                // }
+                bool isValidMove = false;
+                for (size_t i = 0; i < allValidMoves.size(); ++i) {
+                    // allValidMoves[i].getFields();
+                    if (
+                        myMove.getFromX() == allValidMoves[i].getFromX() &&
+                        myMove.getFromY() == allValidMoves[i].getFromY() &&
+                        myMove.getToX() == allValidMoves[i].getToX() &&
+                        myMove.getToY() == allValidMoves[i].getToY()
+                    ) {
+                        i = allValidMoves.size();
+                        isValidMove = true;
+                    }
+                }
 
-                // if(isValidMove) {
+                if(isValidMove) {
                     return myMove;
-                // } else {
-                //     cout << "You are not allowed to make that move. Enter a different one.";
-                // }
+                } else {
+                    cout << "You are not allowed to make that move. Enter a different one.";
+                }
             }
+            //sentinel for invalid move: -1, -1
         }
 
 };

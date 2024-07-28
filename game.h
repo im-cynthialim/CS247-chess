@@ -77,54 +77,58 @@ public:
     void makeMove() {
         Move moveToPlay = playerTurn->chooseMove(board);
 
-            // Colour oppCol = WHITE;
-            // if(playerTurn->getColour() == WHITE) {
-            //     oppCol = BLACK;
-            // }
+            Colour oppCol = WHITE;
+            if(playerTurn->getColour() == WHITE) {
+                oppCol = BLACK;
+            }
 
-            // //STEP 1: make the move on the board
-            // if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
-            //     delete board[moveToPlay.getToX()][moveToPlay.getToY()];
-            // }
-            // board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-
-
-            // //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
-            // bool movePutACheck = false;
-            // char otherKing = 'k';
-            // if (oppCol == WHITE) {
-            //     otherKing = 'K';
-            // }
-
-            // if (isKingInCheck(otherKing)) {
-            //     movePutACheck = true;
-            // }
+            //STEP 1: make the move on the board
+            if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
+                delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
+                
+            }
+            board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
 
-            // //STEP 3: Does my opponent have any possible moves? 
-            // vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
 
-            // //STEP 4: Outcome of this move
-            // if(oppMoves.size() == 0 && movePutACheck == true) {
-            //     cout<<"CheckMate "<<playerTurn->getColour()<<" Wins!";
-            //     if(playerTurn->getColour() == WHITE) {
-            //         status = WHITEWINS;
-            //     } else {
-            //         status = BLACKWINS;
-            //     }
-            // } else if(oppMoves.size() == 0 && movePutACheck == false) {
-            //     cout<<"Stalement";
-            //     status = DRAW;
-            // } else if(oppMoves.size() != 0 && movePutACheck == true) {
-            //     cout<<oppCol<<" is now in check";
-            // }
+            //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
+            bool movePutACheck = false;
+            char otherKing = 'k';
+            if (oppCol == WHITE) {
+                otherKing = 'K';
+            }
 
-            // //STEP 5: Change the playerTurn
-            // if(playerTurn->getColour() == WHITE) {
-            //     playerTurn = black;
-            // } else {
-            //     playerTurn = white;
-            // }
+            if (isKingInCheck(otherKing)) {
+                movePutACheck = true;
+            }
+
+
+            //STEP 3: Does my opponent have any possible moves? 
+            vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
+
+            // // //STEP 4: Outcome of this move
+            if(oppMoves.size() == 0 && movePutACheck == true) {
+                cout<<"Checkmate! "<< playerTurn->getColour()<<" Wins!";
+                if(playerTurn->getColour() == WHITE) {
+                    status = WHITEWINS;
+                } else {
+                    status = BLACKWINS;
+                }
+            } else if(oppMoves.size() == 0 && movePutACheck == false) {
+                cout<<"Stalement";
+                status = DRAW;
+            } else if(oppMoves.size() != 0 && movePutACheck == true) {
+                cout<<oppCol<<" is now in check";
+            }
+
+            //STEP 5: Change the playerTurn
+            if(playerTurn->getColour() == WHITE) {
+                playerTurn = black;
+            } else {
+                playerTurn = white;
+            }
         }
 
 

@@ -94,11 +94,15 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
         // check if a pawn can move upwards twice
         // check to see if curI, curJ is a pawn and check to see if its in a specific spot
         // no need to check if out of bounds because the jump two up can never go out of bounds
-        int moveTwoUpI = curI-2;
-        bool twoUp = getWhiteSpots(curI, curJ);
-        if (board[curI][curJ] == this && twoUp) {
-            moves.push_back(Move{curI, curJ, moveTwoUpI, curJ});
+        // int moveTwoUpI = curI-2;
+        // bool twoUp = getWhiteSpots(curI, curJ);
+        // if (board[curI][curJ] == this && twoUp) {
+        //     moves.push_back(Move{curI, curJ, moveTwoUpI, curJ});
 
+        // }
+
+        if (curI == 6 && board[curI-2][curJ] == nullptr) { // see if black pawn can move 2
+            moves.push_back(Move{curI, curJ, curI - 2, curJ});
         }
     }
 
@@ -129,10 +133,13 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
             moves.push_back(Move{curI, curJ, leftAttackI, leftAttackJ});
         }
 
-        int moveTwoUp = curI+2;
-        bool twoUp = getBlackSpots(curI, curJ);
-        if (board[curI][curJ] == this && twoUp) {
-            moves.push_back(Move{curI, curJ, moveTwoUp, curJ});
+        // int moveTwoUp = curI+2;
+        // bool twoUp = getBlackSpots(curI, curJ);
+        // if (board[curI][curJ] == this && twoUp) {
+            // moves.push_back(Move{curI, curJ, moveTwoUp, curJ});
+        // }
+        if (curI == 1 && board[curI+2][curJ] == nullptr) { // see if black pawn can move 2
+            moves.push_back(Move{curI, curJ, curI + 2, curJ});
         }
     }  
 

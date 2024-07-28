@@ -28,6 +28,7 @@ class Player
                     }
                 }
             }
+            return allMovesOppCanMake;
         }
 
         vector<Move> findAllMovesICanMake (const vector<vector<Piece*>>&board) {
@@ -36,7 +37,6 @@ class Player
                 for (size_t col = 0; col < board[row].size(); ++col) {
                     Piece* piece = board[row][col];
                     if(piece != nullptr && colour == piece->getColour())  {
-                        cout<<piece->getColour();
                         vector<Move> additionalMoves = piece->getPossibleMoves(board, row, col);
                         allMovesICanMake.insert(allMovesICanMake.end(), additionalMoves.begin(), additionalMoves.end()); //append
                     }
