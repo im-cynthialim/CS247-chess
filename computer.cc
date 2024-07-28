@@ -12,6 +12,16 @@
                     }
                 }
             }
+
+            else if(colour == BLACK) {
+                for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
+                    if(board[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] != nullptr && board[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getColour() == WHITE) {
+                        allfindCaptureMoves.push_back(allMovesICanMake[i]);
+                    }
+                }
+            }
+
+            return allfindCaptureMoves;
         }
 
         vector<Move> Computer::avoidCaptures(const vector<vector<Piece*>>& board) {

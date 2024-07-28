@@ -74,6 +74,7 @@ class Game : public Subject
 
 public:
     STATUS status;
+
     void makeMove() {
         Move moveToPlay = playerTurn->chooseMove(board);
 
@@ -109,17 +110,17 @@ public:
 
             // // //STEP 4: Outcome of this move
             if(oppMoves.size() == 0 && movePutACheck == true) {
-                cout<<"Checkmate! "<< playerTurn->getColour()<<" Wins!";
+                cout<<"Checkmate! "<< playerTurn->getColour()<<" Wins!\n";
                 if(playerTurn->getColour() == WHITE) {
                     status = WHITEWINS;
                 } else {
                     status = BLACKWINS;
                 }
             } else if(oppMoves.size() == 0 && movePutACheck == false) {
-                cout<<"Stalement";
+                cout<<"Stalement\n";
                 status = DRAW;
             } else if(oppMoves.size() != 0 && movePutACheck == true) {
-                cout<<oppCol<<" is now in check";
+                cout<<oppCol<<" is now in check\n";
             }
 
             // STEP 5: Change the playerTurn
@@ -134,8 +135,17 @@ public:
 
 
     char getState(int row, int col) const override;
-    // void render();
-    // void resign();
+    void resign() {
+        //the cur player is resigning
+        if(playerTurn->getColour() == BLACK) {
+            status = WHITEWINS;
+            cout << "white wins\n";
+        } else {
+            status = BLACKWINS;
+            cout << "black wins\n";
+        }
+
+    }
 
     // void resetGame();
     bool gameCreatedViaSetup = false;

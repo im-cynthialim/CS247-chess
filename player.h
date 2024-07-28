@@ -78,11 +78,11 @@ class Player
             for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
                 //simulate the board if this move was made 
                 std::vector<std::vector<Piece*>> boardCopy = board; 
-                boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()] = nullptr;
                 boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]; //simulate moving the piece over
+                boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()] = nullptr;
 
-                for (size_t row = 0; row < boardCopy.size(); ++row) {
-                    for (size_t col = 0; col < boardCopy[row].size(); ++col) {
+                for (size_t row = 0; row < 8; ++row) {
+                    for (size_t col = 0; col < 8; ++col) {
                         Piece* piece = boardCopy[row][col];
                         if(piece != nullptr && piece->getColour() == this->colour) {
                             //find all LINES OF SIGHT moves of this piece now that the move was simulated
@@ -91,8 +91,8 @@ class Player
                                 if(possibleMoves[j].getToX() == otherKingPosX && possibleMoves[j].getToY() == otherKingPosY) {
                                     allCheckMoves.push_back(allMovesICanMake[i]);
                                     j = possibleMoves.size();
-                                    col = boardCopy[row].size();
-                                    row = boardCopy.size();
+                                    col = 8;
+                                    row = 8;
                                     //this move has been added. no need to keep checking if we should add it
                                 }
                             }
@@ -102,10 +102,6 @@ class Player
             }
             return allCheckMoves;
         }
-
-
-
-
 
 
         Colour getColour() {

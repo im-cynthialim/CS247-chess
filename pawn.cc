@@ -48,7 +48,7 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
         // check to see if curI, curJ is a pawn and check to see if its in a specific spot
         // no need to check if out of bounds because the jump two up can never go out of bounds
 
-        if (curI == 6 && board[curI-2][curJ] == nullptr) { // see if black pawn can move 2
+        if (curI == 6 && board[curI-2][curJ] == nullptr && board[curI-1][curJ] == nullptr) { // see if black pawn can move 2
             moves.push_back(Move{curI, curJ, curI - 2, curJ});
         }
     }
@@ -80,7 +80,7 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
             moves.push_back(Move{curI, curJ, leftAttackI, leftAttackJ});
         }
 
-        if (curI == 1 && board[curI+2][curJ] == nullptr) { // see if black pawn can move 2
+        if (curI == 1 && board[curI+2][curJ] == nullptr && board[curI+1][curJ] == nullptr) { // see if black pawn can move 2
             moves.push_back(Move{curI, curJ, curI + 2, curJ});
         }
     }  

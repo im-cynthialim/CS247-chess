@@ -56,16 +56,17 @@ int main () {
                 game = new Game(); //create a fresh game and the delete the old one
             }
         } 
-        // else if (command == "resign") {
-        //     if (game) {
-        //         // Handle resign command
-        //         game->resign();
-        //     } else {
-        //         std::cout << "No game in progress.\n";
-        //     }
-        // } 
+        else if (command == "resign") {
+            if (game) {
+                game->resign();
+                delete game; //game is done 
+                game = new Game(); //create a fresh game and the delete the old one
+            } else {
+                std::cout << "No game in progress.\n";
+            }
+        } 
     }
-
+    delete game;
 }
 
 
