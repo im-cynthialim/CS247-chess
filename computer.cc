@@ -27,6 +27,8 @@
         vector<Move> Computer::avoidCaptures(const vector<vector<Piece*>>& board) {
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             vector<Move> allMovesOppPlayer = findAllMovesOppCanMake(board);
+            vector<Move> avoidCaptureMoves = {};
+
 
             for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
                 //if a move that I can make is inside a move that the opponent can make, BAD, dont add it 
@@ -38,7 +40,9 @@
                     }
                 }
                 if(!didIfRun) {
-                    allMovesICanMake.push_back(allMovesICanMake[i]);
+                    avoidCaptureMoves.push_back(allMovesICanMake[i]);
                 }
             }
+
+            return avoidCaptureMoves;
         }

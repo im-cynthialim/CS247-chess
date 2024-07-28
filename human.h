@@ -26,13 +26,15 @@ class Human : public Player
                 int toColLoc = toCol - 'a';
 
                 // cout << "fromCol " << fromCol << " fromRow " << fromRow << " toCol " << toCol << " toRow " << toRow << " End\n";
-                cout << "fromRowLoc " << fromRowLoc << " fromColLoc " << fromColLoc << " toRowLoc " << toRowLoc << " toColLoc " << toColLoc << " End\n";
+                // cout << "fromRowLoc " << fromRowLoc << " fromColLoc " << fromColLoc << " toRowLoc " << toRowLoc << " toColLoc " << toColLoc << " End\n";
 
                 // vector<Move> allValidMoves = findAllMovesICanMake(board);
+                // cout <<  board.at(fromRowLoc).at(fromColLoc)->getPieceType();
                 vector<Move> allValidMoves = board.at(fromRowLoc).at(fromColLoc)->getPossibleMoves(board, fromRowLoc, fromColLoc);
-                    // for (Move num : allValidMoves) {
-                    //     num.getFields();
-                    // }
+                cout << "allvalidMoves:";
+                    for (Move num : allValidMoves) {
+                        num.getFields();
+                    }
                 
                 for (size_t i = 0; i < allValidMoves.size(); ++i) {
                     if (
