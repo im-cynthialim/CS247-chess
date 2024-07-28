@@ -16,7 +16,7 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
     int saveCurI = curI;
     int saveCurJ = curJ;
     int checkNextI = curI - 1;
-    int checkNextJ = curJ - 11;
+    int checkNextJ = curJ - 1;
 
     // check white bishop, 3 cases, diagonal blank space, diagonal piece in its path, out of bounds diagonal
 
