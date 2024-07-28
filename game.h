@@ -92,7 +92,6 @@ public:
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
 
-
             //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
             bool movePutACheck = false;
             char otherKing = 'k';
@@ -123,12 +122,14 @@ public:
                 cout<<oppCol<<" is now in check";
             }
 
-            //STEP 5: Change the playerTurn
+            // STEP 5: Change the playerTurn
             if(playerTurn->getColour() == WHITE) {
                 playerTurn = black;
             } else {
                 playerTurn = white;
             }
+
+            notifyObservers();
         }
 
 
@@ -330,7 +331,6 @@ public:
             {
                 int numBlackKings = 0;
                 int numWhiteKings = 0;
-                // int whiteKingX = 0; int whiteKingY = 0; int blackKingX = 0; int blackKingY = 0;
                 bool pawnWrongSpot = false;
 
                 for (size_t row = 0; row < board.size(); ++row)
@@ -350,16 +350,12 @@ public:
                             if (piece->getPieceType() == 'K')
                             {
                                 ++numWhiteKings;
-                                // whiteKingX = row;
-                                // whiteKingY = col;
                             }
 
                             // update number of Black Kings and position
                             if (piece->getPieceType() == 'k')
                             {
                                 ++numBlackKings;
-                                // blackKingX = row;
-                                // blackKingY = col;
                             }
                         }
                     }

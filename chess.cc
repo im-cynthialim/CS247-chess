@@ -41,11 +41,11 @@ int main () {
         
         else if (command == "move") {
             game->makeMove();
-            if(game->status == WHITE) {
+            if(game->status == WHITEWINS) {
                 whiteScore++;
                 delete game; //game is done 
                 game = new Game(); //create a fresh game and the delete the old one
-            } else if(game->status == BLACK) {
+            } else if(game->status == BLACKWINS) {
                 blackScore++;
                 delete game; //game is done 
                 game = new Game(); //create a fresh game and the delete the old one
