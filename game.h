@@ -28,16 +28,52 @@ class Game : public Subject
 {
     Player *white; // Player is abstract so ptr needed for dynamic type
     Player *black;
-    // vector<vector<Piece*>> board;
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
-
-    // vector<Piece> deadPieces;
-
     Player *playerTurn;
-    // vector<Move> pastMoves;
+
+    bool isKingInCheck(char king) {
+        Colour kingColour = WHITE;
+        if (king  == 'k') {
+            kingColour = BLACK;
+        }
+
+
+        int kingPosX;
+        int kingPosY;
+        for (size_t row = 0; row < board.size(); ++row) {
+            for (size_t col = 0; col < board[row].size(); ++col) {
+                Piece* piece = board[row][col];
+                if(piece != nullptr)  {
+                    if(piece->getPieceType() == king) {
+                        kingPosX = row;
+                        kingPosY = col;
+                    }
+                }
+            }
+        }
+
+        for (size_t row = 0; row < board.size(); ++row) {
+            for (size_t col = 0; col < board[row].size(); ++col) {
+                Piece* piece = board[row][col];
+                if(piece != nullptr && piece->getColour() != kingColour) { //other guys piece from the king
+                    //find all LINES OF SIGHT moves of other guys pieces on the board
+                    vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);
+                    for (size_t j = 0; j < possibleMoves.size(); ++j) {
+                        if(possibleMoves[j].getToX() == kingPosX && possibleMoves[j].getToY() == kingPosY) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    
+    
 
 public:
-    string status;
+    STATUS status;
     void makeMove() {
             Move moveToPlay = playerTurn->chooseMove(board);
 
@@ -54,58 +90,36 @@ public:
 
 
             //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
-            //find position of opp king
             bool movePutACheck = false;
             char otherKing = 'k';
             if (oppCol == WHITE) {
                 otherKing = 'K';
             }
 
-            int otherKingPosX;
-            int otherKingPosY;
-            for (size_t row = 0; row < board.size(); ++row) {
-                for (size_t col = 0; col < board[row].size(); ++col) {
-                    Piece* piece = board[row][col];
-                    if(piece != nullptr)  {
-                        if(piece->getPieceType() == otherKing) {
-                            otherKingPosX = row;
-                            otherKingPosY = col;
-                        }
-                    }
-                }
+            if (isKingInCheck(otherKing)) {
+                movePutACheck = true;
             }
 
-            for (size_t row = 0; row < board.size(); ++row) {
-                for (size_t col = 0; col < board[row].size(); ++col) {
-                    Piece* piece = board[row][col];
-                    if(piece != nullptr && piece->getColour() == playerTurn->getColour()) {
-                        //find all LINES OF SIGHT moves of my pieces on the new board
-                        vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);
-                        for (size_t j = 0; j < possibleMoves.size(); ++j) {
-                            if(possibleMoves[j].getToX() == otherKingPosX && possibleMoves[j].getToY() == otherKingPosY) {
-                                movePutACheck = true;
-                                j = possibleMoves.size();
-                                col = board[row].size();
-                                row = board.size();
-                                //we already know this move created a check so end the for loops. 
-                            }
-                        }
-                    }
-                }
-            }
 
-            //does my opponent have any possible moves? 
+            //STEP 3: Does my opponent have any possible moves? 
             vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
 
+            //STEP 4: Outcome of this move
             if(oppMoves.size() == 0 && movePutACheck == true) {
                 cout<<"CheckMate "<<playerTurn->getColour()<<" Wins!";
+                if(playerTurn->getColour() == WHITE) {
+                    status = WHITEWINS;
+                } else {
+                    status = BLACKWINS;
+                }
             } else if(oppMoves.size() == 0 && movePutACheck == false) {
-                cout<<"Stalement"
+                cout<<"Stalement";
+                status = DRAW;
             } else if(oppMoves.size() != 0 && movePutACheck == true) {
-                cout<<oppCol<<" is now in check"
+                cout<<oppCol<<" is now in check";
             }
 
-            //change the playerTurn
+            //STEP 5: Change the playerTurn
             if(playerTurn->getColour() == WHITE) {
                 playerTurn = black;
             } else {
@@ -122,16 +136,16 @@ public:
     bool gameCreatedViaSetup = false;
 
     // default constructor
-    Game() : status{"game not started"} {}
+    Game() : status{NOTSTARTED} {}
 
     void setUpGame(const string &whiteType, const string &blackType)
     {
-        status = "Running";
+        status = RUNNING;
         addPlayersToGame(whiteType, blackType);
+
         if (!gameCreatedViaSetup)
         {
             // set up default piece positions
-
             //black pieces
             board[0][0] = new Rook(BLACK, 'r');
             board[0][1] = new Knight(BLACK, 'n');
@@ -141,12 +155,10 @@ public:
             board[0][5] = new Bishop(BLACK, 'b');
             board[0][6] = new Knight(BLACK, 'n');
             board[0][7] = new Rook(BLACK, 'r');
-
             // black pawns
             for (int i = 0; i < 8; ++i) {
                 board[1][i] = new Pawn(BLACK, 'p');
             }
-
             // white pieces
             board[7][0] = new Rook(WHITE, 'R');
             board[7][1] = new Knight(WHITE, 'N');
@@ -156,18 +168,17 @@ public:
             board[7][5] = new Bishop(WHITE, 'B');
             board[7][6] = new Knight(WHITE, 'N');
             board[7][7] = new Rook(WHITE, 'R');
-
             // white pawns
             for (int i = 0; i < 8; ++i) {
                 board[6][i] = new Pawn(WHITE, 'P');
             }
         }
 
-        if (playerTurn == nullptr)
-        {
+        if (playerTurn == nullptr) {
             playerTurn = white;
         }
     }
+
 
     void addPlayersToGame(const string &whiteType, const string &blackType)
     {
@@ -207,8 +218,7 @@ public:
 
     void setup()
     {
-        if (status == "Running")
-        {
+        if (status == RUNNING) {
             cout << "Cannot enter setup mode, game in progress";
         }
 
@@ -355,15 +365,17 @@ public:
                 if (
                     numBlackKings != 1 ||
                     numWhiteKings != 1 ||
-                    pawnWrongSpot == true
-                    // || !canAccess(whiteKingX, whiteKingY).isEmpty() ||
-                    // !canAccess(blackKingX, blackKingY).isEmpty() ||
+                    pawnWrongSpot == true ||
+                    isKingInCheck('k') ||
+                    isKingInCheck('K')
                 )
                 {
                     cout << "Cannot exit setup mode. You have: " << "\n";
                     cout << (numBlackKings != 1 ? (to_string(numBlackKings) + " black Kings") : "") << "\n";
                     cout << (numWhiteKings != 1 ? (to_string(numWhiteKings) + " white Kings") : "") << "\n";
                     cout << (pawnWrongSpot ? " A pawn is in the wrong spot" : "") << "\n";
+                    cout << "Is the White King in Check: " << (isKingInCheck('K') ? "YES" : "NO") << "\n";
+                    cout << "Is the Black King in Check: " << (isKingInCheck('k') ? "YES" : "NO") << "\n";
                 }
                 else
                 {
@@ -371,26 +383,9 @@ public:
                 }
             }
         }
-
-        // print the board
-        // for (size_t row = 0; row < board.size(); ++row)
-        // {
-        //     for (size_t col = 0; col < board[row].size(); ++col)
-        //     {
-        //         Piece *piece = board[row][col];
-        //         if (piece != nullptr)
-        //         {
-        //             cout << piece->getPieceType();
-        //         }
-        //         else
-        //         {
-        //             cout << " ";
-        //         }
-        //         cout << " ";
-        //     }
-        //     cout << "\n";
-        // }
     }
 };
 
 #endif
+
+

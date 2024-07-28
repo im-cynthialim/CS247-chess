@@ -7,8 +7,8 @@
 using namespace std;
 
 class Rook : public Piece {
-    vector<Move> lineOfSight(vector<vector<Piece*>> &, int, int) override;
-    vector<Move> possibleMoves( vector<vector<Piece*>> &, int, int) override;
+    vector<Move> lineOfSight(const vector<vector<Piece*>> &, int, int) override;
+    vector<Move> possibleMoves(const vector<vector<Piece*>> &, int, int) override;
     public: 
         Rook(Colour c, char piecetype);
         virtual ~Rook();

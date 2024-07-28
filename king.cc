@@ -12,7 +12,7 @@ King::King(Colour c, char pieceType): Piece{c, pieceType} {}
 
 
 
-vector<Move> King::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> King::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
 
     vector<Move> moves;
     // check all 8 scenarios
@@ -110,7 +110,7 @@ vector<Move> King::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ
     return moves;
 }
 
-vector<Move> King::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

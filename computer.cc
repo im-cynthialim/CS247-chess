@@ -2,7 +2,7 @@
 #include "player.h"
 #include "computer.h"
 
-         vector<Move> Computer::findCaptures(vector<vector<Piece*>>& board) {
+         vector<Move> Computer::findCaptures(const vector<vector<Piece*>>& board) {
             vector<Move> allfindCaptureMoves = {};
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             if(colour == WHITE) {
@@ -14,12 +14,12 @@
             }
         }
 
-        vector<Move> Computer::avoidCaptures(vector<vector<Piece*>>& board) {
+        vector<Move> Computer::avoidCaptures(const vector<vector<Piece*>>& board) {
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             vector<Move> allMovesOppPlayer = findAllMovesOppCanMake(board);
 
             for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
-                //if a move that I can make is inside a move that the opponenet can make, BAD, dont add it 
+                //if a move that I can make is inside a move that the opponent can make, BAD, dont add it 
                 bool didIfRun = false;
                 for(size_t j = 0; j < allMovesOppPlayer.size(); ++j) {
                     if(allMovesICanMake[i].getToX() == allMovesOppPlayer[j].getToX() && allMovesICanMake[i].getToY() == allMovesOppPlayer[j].getToY()) {

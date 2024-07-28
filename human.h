@@ -42,7 +42,7 @@ class Human : public Player
                 if(isValidMove) {
                     return myMove;
                 } else {
-                    cout << "You are not allowed to make that move. Enter a different one."
+                    cout << "You are not allowed to make that move. Enter a different one.";
                 }
             }
         }

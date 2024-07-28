@@ -11,7 +11,7 @@ using namespace std;
 // construct bishop
 Bishop::Bishop(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
-vector<Move> Bishop::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
     vector<Move> moves;
     int saveCurI = curI;
     int saveCurJ = curJ;
@@ -115,7 +115,7 @@ vector<Move> Bishop::lineOfSight(vector<vector<Piece*>> &board, int curI, int cu
     return moves;
 }
 
-vector<Move> Bishop::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> Bishop::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

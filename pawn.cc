@@ -57,7 +57,7 @@ bool Pawn::getBlackSpots(int curI, int curJ) {
 
 }
 
-vector<Move> Pawn::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
     // return an array of moves for the pawn
     vector<Move> moves;
 
@@ -137,7 +137,7 @@ vector<Move> Pawn::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ
     return moves;
 };
 
-vector<Move> Pawn::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> Pawn::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

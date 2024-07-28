@@ -7,7 +7,7 @@
 
 Rook::Rook(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 
-vector<Move> Rook::lineOfSight(vector<vector<Piece*>> &board, int row, int col) { // return all general valid moves (empty squares or captures)
+vector<Move> Rook::lineOfSight(const vector<vector<Piece*>> &board, int row, int col) { // return all general valid moves (empty squares or captures)
     vector<Move> validMoves {};
     int i = row + 1;
 
@@ -80,7 +80,7 @@ vector<Move> Rook::lineOfSight(vector<vector<Piece*>> &board, int row, int col) 
     return validMoves;
 }
 
-vector<Move> Rook::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> Rook::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

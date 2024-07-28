@@ -6,6 +6,13 @@ enum Colour {
     BLACK
 };
 
+enum STATUS {
+    BLACKWINS,
+    WHITEWINS,
+    RUNNING,
+    DRAW,
+    NOTSTARTED
+};
 
 
 #endif

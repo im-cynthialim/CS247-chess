@@ -9,7 +9,7 @@ using namespace std;
 
 Knight::Knight(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 
-vector<Move> Knight::lineOfSight(vector<vector<Piece*>>& board, int row, int col) {
+vector<Move> Knight::lineOfSight(const vector<vector<Piece*>>& board, int row, int col) {
 
     vector<Move> validMoves {};
 
@@ -57,7 +57,7 @@ vector<Move> Knight::lineOfSight(vector<vector<Piece*>>& board, int row, int col
     return validMoves;
 }
 
-vector<Move> Knight::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> Knight::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

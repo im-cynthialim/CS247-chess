@@ -11,7 +11,7 @@ using namespace std;
 
 Queen::Queen(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
-vector<Move> Queen::lineOfSight(vector<vector<Piece*>> &board, int curI, int curJ) { 
+vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) { 
     vector<Move> moves;
     // queen = bishop + rook
     // execute bishop diagonals
@@ -189,7 +189,7 @@ vector<Move> Queen::lineOfSight(vector<vector<Piece*>> &board, int curI, int cur
 }
 
 
-vector<Move> Queen::possibleMoves(vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> Queen::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 

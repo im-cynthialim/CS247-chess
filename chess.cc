@@ -13,7 +13,6 @@ int main () {
     int whiteScore = 0;
     int blackScore = 0;
 
-    // Game* game = new Game();
     Game *game = new Game;
     new TextObserver(game);
     game->notifyObservers();
@@ -24,7 +23,7 @@ int main () {
         // Parse the command and execute the appropriate action
         if (command == "game") {
 
-            if(game->status == "Running") {
+            if(game->status == RUNNING) {
                 delete game;
                 game = new Game(); //create a fresh game and the delete the old one
             }
@@ -32,34 +31,33 @@ int main () {
             string whitePlayer, blackPlayer;
             cin >> whitePlayer >> blackPlayer;
             // Extract player types and start a new game
-            // std::string whitePlayer = command.substr(5, command.find(" ", 5) - 5);
-            // std::string blackPlayer = command.substr(command.find(" ", 5) + 1);
             game->setUpGame(whitePlayer, blackPlayer);
             game->notifyObservers();
         }
-
-        
-    
-        // testGame->notifyObservers();
 
         else if (command == "setup") {
             game->setup();
         }
         
         
-        // else if (command == "move") {
-        //     game->makeMove();
-
-        //     if(game->status == "WhiteWon") {
-        //         whiteScore++;
-        //         //blah blah get status and update score 
-
-        //         //this game is done!
-        //         delete game;
-        //         game = new Game(); //create a fresh game and the delete the old one
-        //     }
-
-        // } else if (command == "resign") {
+        else if (command == "move") {
+            game->makeMove();
+            if(game->status == WHITE) {
+                whiteScore++;
+                delete game; //game is done 
+                game = new Game(); //create a fresh game and the delete the old one
+            } else if(game->status == BLACK) {
+                blackScore++;
+                delete game; //game is done 
+                game = new Game(); //create a fresh game and the delete the old one
+            } else if(game->status == DRAW) {
+                whiteScore++;
+                blackScore++;
+                delete game; //game is done 
+                game = new Game(); //create a fresh game and the delete the old one
+            }
+        } 
+        // else if (command == "resign") {
         //     if (game) {
         //         // Handle resign command
         //         game->resign();
