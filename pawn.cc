@@ -5,6 +5,8 @@
 #include "king.h"
 #include "piece.h"
 #include "pawn.h"
+#include <iostream>
+
 using namespace std;
 
 // construct the pawn
@@ -59,14 +61,14 @@ bool Pawn::getBlackSpots(int curI, int curJ) {
 
 vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
     // return an array of moves for the pawn
-    vector<Move> moves;
+    vector<Move> moves = {};
 
-    //moves for white pawn - moves up board
+    // moves for white pawn - moves up board
     if (this->getColour() == WHITE){ 
         // checking to see if pawn does not go out of bounds and if next spot (jump one forward) is empty
         int nextSpot = curI-1;
-        if (nextSpot < board.size() && board[nextSpot][curJ] == nullptr) {
-            moves.push_back(Move(curI, curJ, nextSpot, curJ));
+        if (nextSpot < board.size() && nextSpot >= 0 && board[nextSpot][curJ] == nullptr) {
+            moves.push_back(Move{curI, curJ, nextSpot, curJ});
         }
 
         // checking if the white pawn can attack a piece to the right
@@ -75,18 +77,18 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
                 
         // board[i+1] because u want to check the size of the next index row, but since its 8x8 probably dont need this,
         // all sizes of each row are the same
-        if (rightAttackI < board.size() && rightAttackJ < board.size() && board[rightAttackI][rightAttackJ] != nullptr
+        if (rightAttackI >= 0 && rightAttackJ >= 0 && rightAttackI < board.size() && rightAttackJ < board.size() && board[rightAttackI][rightAttackJ] != nullptr
         && board[rightAttackI][rightAttackJ]->getColour() == BLACK) {
-            moves.push_back(Move(curI, curJ, rightAttackI, rightAttackJ));
+            moves.push_back(Move{curI, curJ, rightAttackI, rightAttackJ});
         }
 
         // checking if the white pawn can attack a piece to the left
         int leftAttackI = curI-1;
         int leftAttackJ = curJ-1;
 
-        if (leftAttackI < board.size() && leftAttackJ < board.size() && board[leftAttackI][leftAttackJ] != nullptr
+        if (leftAttackI >= 0 && leftAttackJ >= 0 && leftAttackI < board.size() && leftAttackJ < board.size() && board[leftAttackI][leftAttackJ] != nullptr
         && board[leftAttackI][leftAttackJ]->getColour() == Colour::BLACK) {
-            moves.push_back(Move(curI, curJ, leftAttackI, leftAttackJ));
+            moves.push_back(Move{curI, curJ, leftAttackI, leftAttackJ});
         }
 
         // check if a pawn can move upwards twice
@@ -95,7 +97,7 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
         int moveTwoUpI = curI-2;
         bool twoUp = getWhiteSpots(curI, curJ);
         if (board[curI][curJ] == this && twoUp) {
-            moves.push_back(Move(curI, curJ, moveTwoUpI, curJ));
+            moves.push_back(Move{curI, curJ, moveTwoUpI, curJ});
 
         }
     }
@@ -113,24 +115,24 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
         int rightAttackI = curI+1;
         int rightAttackJ = curJ-1;
 
-        if (rightAttackI < 8 && rightAttackJ < 8 && board[rightAttackI][rightAttackJ] != nullptr
+        if (rightAttackI >= 0 && rightAttackJ >= 0 && rightAttackI < 8 && rightAttackJ < 8 && board[rightAttackI][rightAttackJ] != nullptr
         && board[rightAttackI][rightAttackJ]->getColour() == WHITE) {
-            moves.push_back(Move(curI, curJ, rightAttackI, rightAttackJ));
+            moves.push_back(Move{curI, curJ, rightAttackI, rightAttackJ});
         }
 
         // checking if black pawn can attack a piece to the left
         int leftAttackI = curI+1;
         int leftAttackJ = curJ+1;
 
-        if (leftAttackI < board.size() && leftAttackJ < 8 && board[leftAttackI][leftAttackJ] != nullptr
+        if (leftAttackI >= 0 && leftAttackJ >= 0 && leftAttackI < 8 && leftAttackJ < 8 && board[leftAttackI][leftAttackJ] != nullptr
         && board[leftAttackI][leftAttackJ]->getColour() == Colour::WHITE) {
-            moves.push_back(Move(curI, curJ, leftAttackI, leftAttackJ));
+            moves.push_back(Move{curI, curJ, leftAttackI, leftAttackJ});
         }
 
         int moveTwoUp = curI+2;
         bool twoUp = getBlackSpots(curI, curJ);
         if (board[curI][curJ] == this && twoUp) {
-            moves.push_back(Move(curI, curJ, moveTwoUp, curJ));
+            moves.push_back(Move{curI, curJ, moveTwoUp, curJ});
         }
     }  
 
@@ -154,7 +156,7 @@ vector<Move> Pawn::possibleMoves(const vector<vector<Piece*>> &board, int row, i
                 kingX = Krow;
                 kingY = Kcol;
                 break;
-                }
+            }
         }
     }
 
@@ -169,7 +171,6 @@ vector<Move> Pawn::possibleMoves(const vector<vector<Piece*>> &board, int row, i
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
-
                     vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
                     Move myKing = {i, j, kingX, kingY};
                     auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
