@@ -48,9 +48,94 @@ public:
 
             //STEP 1: make the move on the board
 
+               bool pawnPromotionMove = false;
+        char promoteTo = 'p';
+
+        if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7)
+        { // check for black pawn promotion
+            string validPieces = "qrnb";
+
+            if (dynamic_cast<Human *>(playerTurn))
+            {
+                cin >> promoteTo;
+
+                while (validPieces.find(promoteTo) == string::npos)
+                {
+                    cout << "Invalid piece for promotion, choose again" << "\n";
+                    cin >> promoteTo;
+                }
+                pawnPromotionMove = true;
+            }
+            else
+            { // choose promotion piece if computer
+                promoteTo = 'q';
+            }
+        }
+        else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
+        { // check for white pawn promotion
+            string validPieces = "QRNB";
+
+            if (dynamic_cast<Human *>(playerTurn))
+            {
+                cin >> promoteTo;
+
+                while (validPieces.find(promoteTo) == string::npos)
+                {
+                    cout << "Invalid piece for promotion, choose again" << "\n";
+                    cin >> promoteTo;
+                }
+                pawnPromotionMove = true;
+            }
+            else
+            { // choose promotion piece if computer
+                promoteTo = 'Q';
+            }
+        }
+
+        if (pawnPromotionMove)
+        {
+
+            // replace pawn with piece chosen
+            delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+
+            switch (tolower(promoteTo))
+            {
+
+            // queen
+            case 'q':
+            {
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
+                break;
+            }
+            // knight
+            case 'n':
+            {
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Knight(tolower(promoteTo) == 'n' ? BLACK : WHITE, promoteTo);
+                break;
+            }
+            // bishop
+            case 'b':
+            {
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Bishop(tolower(promoteTo) == 'b' ? BLACK : WHITE, promoteTo);
+                break;
+            }
+            // rook
+            case 'r':
+            {
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Rook(tolower(promoteTo) == 'r' ? BLACK : WHITE, promoteTo);
+                break;
+            }
+            default:
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
+                break;
+            }
+        }
+
+
             //Castle stuffs
             //MOVE ROOK if the move is a castle
-            if(
+        else if(
                 tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
                 abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
             ) {
@@ -65,6 +150,8 @@ public:
                 }
             }
 
+        else {
+
             
 
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
@@ -75,7 +162,7 @@ public:
             }
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
-
+        }
 
             //add the move to the pastMoves vector
             pastMoves.push_back(moveToPlay); //put latest move at beginning
@@ -107,7 +194,7 @@ public:
                 cout<<"Stalement\n";
                 status = DRAW;
             } else if(oppMoves.size() != 0 && movePutACheck == true) {
-                cout<<oppCol<<" is now in check\n";
+                cout<< (oppCol == BLACK ? "Black" : "White") <<" is now in check\n";
             }
 
             // STEP 5: Change the playerTurn

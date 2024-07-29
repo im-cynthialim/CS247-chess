@@ -3,7 +3,9 @@
 #include "queen.h"
 #include "enums.h"
 #include "move.h"
+#include <iostream>
 #include "king.h"
+#include <cctype>
 #include "piece.h"
 
 using namespace std;
@@ -67,7 +69,7 @@ vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, i
         checkNextJ = curJ + 1;
 
 
-        // check diagonal left moves for black bishop, while loop to make sure its in bounds
+       // check right bottom diagonal
         while (checkNextI < board.size() && checkNextJ < board.size()) {
 
             // check if left diagonal is empty
@@ -95,10 +97,9 @@ vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, i
         checkNextI = curI + 1;
         checkNextJ = curJ - 1;
 
-        // check diagonal right moves
+        // check bottom left moves
 
         while (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0) {
-
             if (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0 && board[checkNextI][checkNextJ] == nullptr) {
                 moves.push_back(Move{curI, curJ, checkNextI, checkNextJ});
 
@@ -107,8 +108,6 @@ vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, i
             } else if (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0 && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move{curI, curJ, checkNextI, checkNextJ});
-                checkNextI = -2;
-                checkNextJ = -1;
             }
                else {
                 break;
@@ -205,7 +204,7 @@ vector<Move> Queen::possibleMoves(const vector<vector<Piece*>> &board, int row, 
 
     for (size_t Krow = 0; Krow < board.size(); ++Krow) {
         for (size_t Kcol = 0; Kcol < board[row].size(); ++Kcol) {
-            if (board[Krow][Kcol] != nullptr && dynamic_cast<King*>(board.at(Krow).at(Kcol)) && board[Krow][Kcol]->getColour() == this->getColour()) { 
+            if (board[Krow][Kcol] != nullptr && tolower(board[Krow][Kcol]->getPieceType()) == 'k' && board[Krow][Kcol]->getColour() == this->getColour()) { 
                 kingX = Krow;
                 kingY = Kcol;
                 break;
