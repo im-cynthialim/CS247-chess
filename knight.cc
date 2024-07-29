@@ -56,58 +56,58 @@ vector<Move> Knight::lineOfSight(const vector<vector<Piece*>>& board, int row, i
     return validMoves;
 }
 
-vector<Move> Knight::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
-    vector<Move> validMoves{};
-    vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
+// vector<Move> Knight::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
+//     vector<Move> validMoves{};
+//     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
-    // call find king to find MY king's position
-    bool inCheck = false;
-    int initX = row;
-    int initY = col;
+//     // call find king to find MY king's position
+//     bool inCheck = false;
+//     int initX = row;
+//     int initY = col;
 
-    int kingX, kingY;
-    // find curPlayer king's position
-    for (size_t Krow = 0; Krow < board.size(); ++Krow) {
-        for (size_t Kcol = 0; Kcol < board[row].size(); ++Kcol) {
-            if (board[Krow][Kcol] != nullptr && (board.at(Krow).at(Kcol)->getPieceType() == 'k' || board.at(Krow).at(Kcol)->getPieceType() == 'K') && board[Krow][Kcol]->getColour() == this->getColour()) { 
-                kingX = Krow;
-                kingY = Kcol;
-                break;
-            }
-        }
-    }
+//     int kingX, kingY;
+//     // find curPlayer king's position
+//     for (size_t Krow = 0; Krow < board.size(); ++Krow) {
+//         for (size_t Kcol = 0; Kcol < board[row].size(); ++Kcol) {
+//             if (board[Krow][Kcol] != nullptr && (board.at(Krow).at(Kcol)->getPieceType() == 'k' || board.at(Krow).at(Kcol)->getPieceType() == 'K') && board[Krow][Kcol]->getColour() == this->getColour()) { 
+//                 kingX = Krow;
+//                 kingY = Kcol;
+//                 break;
+//             }
+//         }
+//     }
 
-    // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
-    int validateMove = 0; // index to iterate through generalMoves
+//     // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
+//     int validateMove = 0; // index to iterate through generalMoves
     
-    vector<vector<Piece*>> simulateBoard = board;
+//     vector<vector<Piece*>> simulateBoard = board;
 
-    while (validateMove < potentialMoves.size()) {
-        simulateBoard[initX][initY] = nullptr;
-        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put knight in new potential place
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
+//     while (validateMove < potentialMoves.size()) {
+//         simulateBoard[initX][initY] = nullptr;
+//         simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put knight in new potential place
+//         for (int i = 0; i < 8; ++i) {
+//             for (int j = 0; j < 8; ++j) {
+//                 if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
 
-                    vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
-                    Move myKing = {i, j, kingX, kingY};
-                    auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
-                    if (it != enemyMoves.end()) { // enemy piece checks my king
-                        inCheck = true;
-                        break; // general move is invalid
-                    }
-                }
-            }
-        }
-        if (!inCheck) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
-            validMoves.push_back(potentialMoves[validateMove]);
-        }
-        inCheck = false;
-        initX = potentialMoves[validateMove].getToX();
-        initY = potentialMoves[validateMove].getToY();
-        ++validateMove;
-    }
-    return validMoves;
-}
+//                     vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
+//                     Move myKing = {i, j, kingX, kingY};
+//                     auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
+//                     if (it != enemyMoves.end()) { // enemy piece checks my king
+//                         inCheck = true;
+//                         break; // general move is invalid
+//                     }
+//                 }
+//             }
+//         }
+//         if (!inCheck) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
+//             validMoves.push_back(potentialMoves[validateMove]);
+//         }
+//         inCheck = false;
+//         initX = potentialMoves[validateMove].getToX();
+//         initY = potentialMoves[validateMove].getToY();
+//         ++validateMove;
+//     }
+//     return validMoves;
+// }
 
 Knight::~Knight() {}

@@ -11,7 +11,7 @@ class Pawn : public Piece {
     bool rightEnPassant = false;
     bool leftEnPassant = false;
     vector<Move> lineOfSight(const vector<vector<Piece*>> &, int, int) override;
-    vector<Move> possibleMoves(const vector<vector<Piece*>> &, int, int) override;
+    // vector<Move> possibleMoves(const vector<vector<Piece*>> &, int, int) override;
     bool getWhiteSpots(int curI, int curJ);
     bool getBlackSpots(int curI, int curJ);
     

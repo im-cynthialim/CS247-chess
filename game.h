@@ -47,9 +47,7 @@ public:
             oppCol = BLACK;
         }
 
-
-
-        // STEP 1: make the move on the board
+        //STEP 1: make the move on the board
 
         // reset en passant
         for (size_t i = 0; i < board.size(); ++i) {
@@ -88,7 +86,6 @@ public:
         else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
         { // check for white pawn promotion
             string validPieces = "QRNB";
-
             if (dynamic_cast<Human *>(playerTurn))
             {
                 cin >> promoteTo;
@@ -105,10 +102,8 @@ public:
                 promoteTo = 'Q';
             }
         }
-
         if (pawnPromotionMove)
         {
-
             // replace pawn with piece chosen
             delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
@@ -145,29 +140,27 @@ public:
                 break;
             }
         }
-        // Castle stuffs
-        // MOVE ROOK if the move is a castle
-        else if (
+
+
+        //Castle stuffs: move the rook
+        if(
             tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
-            abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2)
-        {
-            if (moveToPlay.getFromY() - moveToPlay.getToY() == 2)
-            { // king moves left (castle far)
+            abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
+        ) {
+            if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
-            }
-            else if (moveToPlay.getFromY() - moveToPlay.getToY() == -2)
-            { // king moves right (castle close)
+            } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
             }
         }
-        else
-        {
 
-            if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getFromX() == 1 && moveToPlay.getToX() == 3)
+        //preform move on the board if its not pawn promotion (even if its castle, need to mov ethe king)
+
+        if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getFromX() == 1 && moveToPlay.getToX() == 3)
             {
                 // if our move is a two-square move of a black pawn
                 if (moveToPlay.getToY() + 1 < 8 && board[moveToPlay.getToX()][moveToPlay.getToY() + 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() + 1]->getPieceType() == 'P')
@@ -204,6 +197,20 @@ public:
             else {
                 delete board[moveToPlay.getToX() - 1][moveToPlay.getToY()]; // delete captured pawn
                 board[moveToPlay.getToX() - 1][moveToPlay.getToY()] = nullptr;
+            }
+            
+            board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+
+
+
+        }
+        else if(!pawnPromotionMove) {
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
+            if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
+                delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+                board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
+                
             }
             
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
@@ -266,22 +273,12 @@ public:
             cout << (oppCol == BLACK ? "Black" : "White") << " is now in check\n";
         }
 
-        // STEP 5: Change the playerTurn
-        if (playerTurn->getColour() == WHITE)
-        {
-            playerTurn = black;
-        }
-        else
-        {
-            playerTurn = white;
-        }
-
-        // //UPDATE CHECK BOOL
-        // if(movePutACheck) {
-        //     playerTurn->playerInCheck = true;
-        // } else {
-        //     playerTurn->playerInCheck = false;
-        // }
+            // STEP 5: Change the playerTurn
+            if(playerTurn->getColour() == WHITE) {
+                playerTurn = black;
+            } else {
+                playerTurn = white;
+            }
 
         notifyObservers();
     }
@@ -553,6 +550,7 @@ public:
                 }
                 else
                 {
+                    cout << "you successfully completed setup mode" << "\n";
                     break;
                 }
             }
