@@ -22,6 +22,7 @@
 #include "rook.h"
 #include "subject.h"
 #include "helperFuncs.h"
+#include <cctype>
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class Game : public Subject
     Player *black = nullptr;
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
     Player *playerTurn = nullptr;
+    Colour startColour = WHITE;
 
 public:
     STATUS status;
@@ -46,10 +48,26 @@ public:
 
             //STEP 1: make the move on the board
 
-            //check is the move was a castle move and move the rook over also:
+            //Castle stuffs
+            //MOVE ROOK if the move is a castle
+            if(
+                tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
+                abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
+            ) {
+                if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
+                } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
+                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
+                }
+            }
 
             
 
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
                 board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
@@ -166,7 +184,9 @@ public:
             }
         }
 
-        if (playerTurn == nullptr) {
+        if (startColour == BLACK) {
+            playerTurn = black;
+        } else {
             playerTurn = white;
         }
     }
@@ -305,13 +325,14 @@ public:
             else if (command == "=")
             {
                 string colour;
+                cin >> colour;
                 if (colour == "black")
                 {
-                    playerTurn = black; // referring to a player here
+                    startColour = BLACK;
                 }
                 else
                 {
-                    playerTurn = white;
+                    startColour = WHITE;
                 }
             }
             else if (command == "done")

@@ -147,18 +147,19 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //1)king cant be currently in check?
     //2)king cant have moved?
-    if(isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved) {
+    if(origKingPos.first != row || origKingPos.second != col && board[row][col]!= nullptr || isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved || origKingPos.first != row || origKingPos.second != col) {
         return validMoves;
     }
     
     //CASTLING CLOSEST TO KING
     //3)rook right of king cant have moved?
-    bool hasRookClosestMoved = false;
+    bool hasRookClosestMoved = true;
     if(board[origRookClosestPos.first][origRookClosestPos.second] != nullptr && 
     board[origRookClosestPos.first][origRookClosestPos.second]->getPieceType() == rook && 
     board[origRookClosestPos.first][origRookClosestPos.second]->hasMoved == false
     ) {
-        hasRookClosestMoved = true;
+        // cout << "bad3";
+        hasRookClosestMoved = false;
     }
 
     //4)is there a piece in the position one right of king
@@ -169,7 +170,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     vector<vector<Piece*>> simulateBoard = board;
     simulateBoard[row][col+1] = this;
     simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(board[row][col+1]->getPieceType(), simulateBoard))) {
+    if ((isKingInCheck(simulateBoard[row][col+1]->getPieceType(), simulateBoard))) {
         isKingOneRightChecked = true;
     }
 
@@ -178,7 +179,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     simulateBoard = board;
     simulateBoard[row][col+2] = this;
     simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(board[row][col+2]->getPieceType(), simulateBoard))) {
+    if ((isKingInCheck(simulateBoard[row][col+2]->getPieceType(), simulateBoard))) {
         isKingTwoRightChecked = true;
     }
 
@@ -194,12 +195,12 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //CASTLING FARTHEST TO KING
     //rook left of king cant have moved?
-    bool hasRookFarthestMoved = false;
+    bool hasRookFarthestMoved = true;
     if(board[origRookFarthestPos.first][origRookFarthestPos.second] != nullptr && 
     board[origRookFarthestPos.first][origRookFarthestPos.second]->getPieceType() == rook && 
     board[origRookFarthestPos.first][origRookFarthestPos.second]->hasMoved == false
     ) {
-        hasRookFarthestMoved = true;
+        hasRookFarthestMoved = false;
     }
 
     //is there a piece in the position one left of king
@@ -211,7 +212,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     simulateBoard = board;
     simulateBoard[row][col-1] = this;
     simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(board[row][col-1]->getPieceType(), simulateBoard))) {
+    if ((isKingInCheck(simulateBoard[row][col-1]->getPieceType(), simulateBoard))) {
         isKingOneLeftChecked = true;
     }
 
@@ -220,7 +221,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     simulateBoard = board;
     simulateBoard[row][col-2] = this;
     simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(board[row][col-2]->getPieceType(), simulateBoard))) {
+    if ((isKingInCheck(simulateBoard[row][col-2]->getPieceType(), simulateBoard))) {
         isKingTwoLeftChecked = true;
     }
 
@@ -229,7 +230,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     simulateBoard = board;
     simulateBoard[row][col-3] = this;
     simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(board[row][col-3]->getPieceType(), simulateBoard))) {
+    if ((isKingInCheck(simulateBoard[row][col-3]->getPieceType(), simulateBoard))) {
         isKingThreeLeftChecked = true;
     }
 
@@ -245,6 +246,10 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     ) {
         validMoves.push_back(Move{row, col, row, col-2});
     }
+
+    // for (Move num: validMoves) {
+    //     num.getFields();
+    // }
 
     return validMoves;
 };
