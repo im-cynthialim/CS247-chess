@@ -15,20 +15,9 @@ class ComputerThree : public Computer
         Move chooseMove(const vector<vector<Piece*>>& board) override {
             vector<Move> avoidCaptureMoves = avoidCaptures(board);
             vector<Move> captureMoves = findCaptures(board);
-            vector<Move> checkMoves = findChecks(board);
-
-
-            cout<<"avoidCaptureMoves";
-            for (Move num: avoidCaptureMoves) {
-                num.getFields();
-            }
-
-            
-
-            
+            vector<Move> checkMoves = findChecks(board);            
 
             vector<Move> movesToChoose = {};
-
             //intersect all three
             for (const auto& move1 : avoidCaptureMoves) {
                 for (const auto& move2 : captureMoves) {

@@ -107,6 +107,10 @@ public:
 
             //STEP 3: Does my opponent have any possible moves? 
             vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
+                    //         cout << "moves of opp player:";
+                    // for (Move num : oppMoves) {
+                    //     num.getFields();
+                    // }
 
             // // //STEP 4: Outcome of this move
             if(oppMoves.size() == 0 && movePutACheck == true) {
