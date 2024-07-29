@@ -46,9 +46,9 @@ public:
                 oppCol = BLACK;
             }
 
-            //STEP 1: make the move on the board
+        //STEP 1: make the move on the board
 
-               bool pawnPromotionMove = false;
+        bool pawnPromotionMove = false;
         char promoteTo = 'p';
 
         if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7)
@@ -74,7 +74,6 @@ public:
         else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
         { // check for white pawn promotion
             string validPieces = "QRNB";
-
             if (dynamic_cast<Human *>(playerTurn))
             {
                 cin >> promoteTo;
@@ -91,10 +90,8 @@ public:
                 promoteTo = 'Q';
             }
         }
-
         if (pawnPromotionMove)
         {
-
             // replace pawn with piece chosen
             delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
@@ -133,27 +130,24 @@ public:
         }
 
 
-            //Castle stuffs
-            //MOVE ROOK if the move is a castle
-        else if(
-                tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
-                abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
-            ) {
-                if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
-                } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
-                }
+        //Castle stuffs: move the rook
+        if(
+            tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
+            abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
+        ) {
+            if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
+            } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
             }
+        }
 
-        else {
-
-            
-
+        //preform move on the board if its not pawn promotion (even if its castle, need to mov ethe king)
+        if(!pawnPromotionMove) {
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
@@ -203,14 +197,6 @@ public:
             } else {
                 playerTurn = white;
             }
-
-            // //UPDATE CHECK BOOL 
-            // if(movePutACheck) {
-            //     playerTurn->playerInCheck = true;
-            // } else {
-            //     playerTurn->playerInCheck = false;
-            // }
- 
 
             notifyObservers();
         }
@@ -377,11 +363,13 @@ public:
                     case 'b':
                     {
                         board[rowLoc][colLoc] = new Bishop(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                        break;
                     }
                     // rook
                     case 'r':
                     {
                         board[rowLoc][colLoc] = new Rook(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                        break;
                     }
                     default:
                         cerr << "Invalid command" << endl;
@@ -474,6 +462,7 @@ public:
                 }
                 else
                 {
+                    cout << "you successfully completed setup mode" << "\n";
                     break;
                 }
             }

@@ -3,7 +3,9 @@
 #define HELPERFUNCS_H
 #include <vector>
 #include "enums.h"
-#include "piece.h"
+// #include "piece.h"
+class Piece;
+
 
 // function declarations
 bool isKingInCheck(char king, const vector<vector<Piece*>>& board);
