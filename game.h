@@ -186,7 +186,6 @@ public:
                     static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("left", true);
                 }
             }
-        }
 
         if ((moveToPlay.getFromX() == 3 || moveToPlay.getFromX() == 4) && tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'p' && moveToPlay.getToY() != moveToPlay.getFromY() && board[moveToPlay.getToX()][moveToPlay.getToY()] == nullptr) {
             // making an en passant move
