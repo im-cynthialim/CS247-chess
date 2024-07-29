@@ -21,6 +21,7 @@
 #include "king.h"
 #include "rook.h"
 #include "subject.h"
+#include "helperFuncs.cc"
 
 using namespace std;
 
@@ -31,49 +32,9 @@ class Game : public Subject
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
     Player *playerTurn = nullptr;
 
-    bool isKingInCheck(char king) {
-        Colour kingColour = WHITE;
-        if (king  == 'k') {
-            kingColour = BLACK;
-        }
-
-
-        int kingPosX;
-        int kingPosY;
-        for (size_t row = 0; row < board.size(); ++row) {
-            for (size_t col = 0; col < board[row].size(); ++col) {
-                Piece* piece = board[row][col];
-                if(piece != nullptr)  {
-                    if(piece->getPieceType() == king) {
-                        kingPosX = row;
-                        kingPosY = col;
-                    }
-                }
-            }
-        }
-
-        for (size_t row = 0; row < board.size(); ++row) {
-            for (size_t col = 0; col < board[row].size(); ++col) {
-                Piece* piece = board[row][col];
-                if(piece != nullptr && piece->getColour() != kingColour) { //other guys piece from the king
-                    //find all LINES OF SIGHT moves of other guys pieces on the board
-                    vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);
-                    for (size_t j = 0; j < possibleMoves.size(); ++j) {
-                        if(possibleMoves[j].getToX() == kingPosX && possibleMoves[j].getToY() == kingPosY) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    
-    
-
 public:
     STATUS status;
+    vector<Move> pastMoves;
 
     void makeMove() {
         Move moveToPlay = playerTurn->chooseMove(board);
@@ -92,6 +53,9 @@ public:
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
+            //add the move to the pastMoves vector
+            pastMoves.push_back(moveToPlay); //put latest move at beginning
+
 
             //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
             bool movePutACheck = false;
@@ -100,19 +64,15 @@ public:
                 otherKing = 'K';
             }
 
-            if (isKingInCheck(otherKing)) {
+            if (isKingInCheck(otherKing, board)) {
                 movePutACheck = true;
             }
 
 
             //STEP 3: Does my opponent have any possible moves? 
             vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
-                    //         cout << "moves of opp player:";
-                    // for (Move num : oppMoves) {
-                    //     num.getFields();
-                    // }
 
-            // // //STEP 4: Outcome of this move
+            //STEP 4: Outcome of this move
             if(oppMoves.size() == 0 && movePutACheck == true) {
                 cout<<"Checkmate! "<< playerTurn->getColour()<<" Wins!\n";
                 if(playerTurn->getColour() == WHITE) {
@@ -133,6 +93,14 @@ public:
             } else {
                 playerTurn = white;
             }
+
+            // //UPDATE CHECK BOOL 
+            // if(movePutACheck) {
+            //     playerTurn->playerInCheck = true;
+            // } else {
+            //     playerTurn->playerInCheck = false;
+            // }
+ 
 
             notifyObservers();
         }
@@ -380,16 +348,16 @@ public:
                     numBlackKings != 1 ||
                     numWhiteKings != 1 ||
                     pawnWrongSpot == true ||
-                    isKingInCheck('k') ||
-                    isKingInCheck('K')
+                    isKingInCheck('k', board) ||
+                    isKingInCheck('K', board)
                 )
                 {
                     cout << "Cannot exit setup mode. You have: " << "\n";
                     cout << (numBlackKings != 1 ? (to_string(numBlackKings) + " black Kings") : "") << "\n";
                     cout << (numWhiteKings != 1 ? (to_string(numWhiteKings) + " white Kings") : "") << "\n";
                     cout << (pawnWrongSpot ? " A pawn is in the wrong spot" : "") << "\n";
-                    cout << "Is the White King in Check: " << (isKingInCheck('K') ? "YES" : "NO") << "\n";
-                    cout << "Is the Black King in Check: " << (isKingInCheck('k') ? "YES" : "NO") << "\n";
+                    cout << "Is the White King in Check: " << (isKingInCheck('K', board) ? "YES" : "NO") << "\n";
+                    cout << "Is the Black King in Check: " << (isKingInCheck('k', board) ? "YES" : "NO") << "\n";
                 }
                 else
                 {
@@ -401,5 +369,3 @@ public:
 };
 
 #endif
-
-

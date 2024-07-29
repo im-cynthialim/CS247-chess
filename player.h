@@ -13,9 +13,8 @@ class Player
 {
     protected: 
         Colour colour; 
-        bool canCastle = false;
         Player (Colour colour) : colour{colour} {};
-    public:
+    public:         
         //helper bois
         vector<Move> findAllMovesOppCanMake(const vector<vector<Piece*>>& board) {
             vector<Move> allMovesOppCanMake = {};

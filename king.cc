@@ -5,6 +5,8 @@
 #include "king.h"
 #include <algorithm>
 #include <iostream>
+#include "helperFuncs.cc"
+#include <cctype>
 using namespace std;
 
 // construct King object
@@ -114,41 +116,83 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
-    bool inCheck = false;
-    int initX = row;
-    int initY = col;
-
-    // for each general move, call line of Sight on enemy pieces + see if my king within results (i.e. check) 
-    int validateMove = 0; // index to iterate through generalMoves
-    
-    vector<vector<Piece*>> simulateBoard = board;
-
-    while (validateMove < potentialMoves.size()) {
-        simulateBoard[initX][initY] = nullptr;
-        simulateBoard[potentialMoves[validateMove].getToX()][potentialMoves[validateMove].getToY()] = this; // put king in new potential place
-
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                if (simulateBoard[i][j] != nullptr && simulateBoard[i][j]->getColour() != this->getColour()) {
-
-                    vector<Move> enemyMoves = simulateBoard.at(i).at(j)->getLineOfSightMoves(simulateBoard, i, j);
-                    Move myKing = {i, j, potentialMoves[validateMove].getToX(), potentialMoves[validateMove].getToY()};
-                    auto it = find (enemyMoves.begin(), enemyMoves.end(), myKing);
-                    if (it != enemyMoves.end()) { // enemy piece checks my king
-                        inCheck = true;
-                        break; // general move is invalid
-                    }
-                }
-            }
+    //is this move going to cause the king to be in check? 
+    for(int i = 0; i < potentialMoves.size(); i++) {
+        vector<vector<Piece*>> simulateBoard = board;
+        simulateBoard[row][col] = nullptr;
+        simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()] = this; // put king in new potential place
+        if (!isKingInCheck(simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()]->getPieceType(), simulateBoard)) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
+            validMoves.push_back(potentialMoves[i]);
         }
-        if (!inCheck) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
-            validMoves.push_back(potentialMoves[validateMove]);
-        }
-        inCheck = false;
-        initX = potentialMoves[validateMove].getToX();
-        initY = potentialMoves[validateMove].getToY();
-        ++validateMove;
     }
+
+
+    //CASTLING
+    //if the king is white: 
+    std::pair<int, int> origKingPos(7, 4);
+    std::pair<int, int> origRookClosestPos(7, 7);
+    std::pair<int, int> origRookFarthestPos(7, 0);
+    char rook = 'R';
+    //if the king we are trying to see the moves of is black: 
+    if(board[row][col]->getColour() == BLACK) {
+        origKingPos = std::make_pair(0, 4);
+        origRookClosestPos = std::make_pair(0, 7);
+        origRookFarthestPos = std::make_pair(0, 0);
+        rook = 'r';
+    }
+
+
+    // //CASTLING
+
+    // //1)king cant be currently in check?
+    // //2)king cant have moved?
+    // if(isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved) {
+    //     return validMoves;
+    // }
+    
+    // //CASTLING CLOSEST TO KING
+    // //3)rook right of king cant have moved?
+    // bool hasRookClosestMoved = false;
+    // if(board[origRookClosestPos.first][origRookClosestPos.second] != nullptr && 
+    // board[origRookClosestPos.first][origRookClosestPos.second]->getPieceType() == rook && 
+    // board[origRookClosestPos.first][origRookClosestPos.second]->hasMoved == false
+    // ) {
+    //     hasRookClosestMoved = true;
+    // }
+
+    // //4)is there a piece in the position one right of king
+    // //5)is there a piece in the position two right from king 
+
+    // //6)if the king is put one space over to the right, is it in check? (dont move rook)
+    // bool isKingOneRightChecked = false;
+    // vector<vector<Piece*>> simulateBoard = board;
+    // simulateBoard[row][col+1] = this;
+    // simulateBoard[row][col] = nullptr;
+    // if ((isKingInCheck(board[row][col+1]->getPieceType(), simulateBoard))) {
+    //     isKingOneRightChecked = true;
+    // }
+
+    // //7) if the king is moved two spaces over to the right, is it in check? (dont move rook)
+    // bool isKingTwoRightChecked = false;
+    // simulateBoard = board;
+    // simulateBoard[row][col+2] = this;
+    // simulateBoard[row][col] = nullptr;
+    // if ((isKingInCheck(board[row][col+2]->getPieceType(), simulateBoard))) {
+    //     isKingTwoRightChecked = true;
+    // }
+
+    // //add castle closest to me
+    // if (
+    //     !hasRookClosestMoved && //rook closest hasn't move
+    //     board[origKingPos.first][origKingPos.second + 1] == nullptr && //no piece next to king on right
+    //     board[origKingPos.first][origKingPos.second + 2] == nullptr && //no piece to right of the king
+    //     !isKingOneRightChecked && 
+    //     !isKingTwoRightChecked
+    // ) {
+    //     validMoves.push_back(Move{row, col})
+    // }
+
+
 
     return validMoves;
 };

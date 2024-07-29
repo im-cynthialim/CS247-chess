@@ -14,8 +14,8 @@ class Piece {
     virtual vector<Move> possibleMoves(const vector<vector<Piece*>> &, int, int) = 0;
     virtual vector<Move> lineOfSight(const vector<vector<Piece*>> &, int, int) = 0;
     
-    
     public:
+        bool hasMoved = false;
         Piece (Colour colour, char pieceType);
         char getPieceType();
         Colour getColour();
