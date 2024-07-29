@@ -106,6 +106,8 @@ class Player
         Colour getColour() {
             return colour;
         }
+
+        virtual ~Player() {}
 };
 
 

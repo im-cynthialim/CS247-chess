@@ -484,6 +484,7 @@ public:
                     delete board[rowLoc][colLoc];
                     board[rowLoc][colLoc] = nullptr;
                 }
+                notifyObservers();
             }
             else if (command == "=")
             {
@@ -544,17 +545,34 @@ public:
                     cout << (numBlackKings != 1 ? (to_string(numBlackKings) + " black Kings") : "") << "\n";
                     cout << (numWhiteKings != 1 ? (to_string(numWhiteKings) + " white Kings") : "") << "\n";
                     cout << (pawnWrongSpot ? " A pawn is in the wrong spot" : "") << "\n";
-                    cout << "Is the White King in Check: " << (isKingInCheck('K', board) ? "YES" : "NO") << "\n";
-                    cout << "Is the Black King in Check: " << (isKingInCheck('k', board) ? "YES" : "NO") << "\n";
+                    cout << (isKingInCheck('K', board) ? "The white king in check" : "") << "\n";
+                    cout << (isKingInCheck('k', board) ? "The black king in check" : "") << "\n";
                 }
                 else
                 {
-                    cout << "you successfully completed setup mode" << "\n";
+                    cout << "You successfully completed setup mode" << "\n";
                     break;
                 }
             }
         }
     }
+
+    ~Game() {
+    // clean up board
+    for (int i = 0; i < board.size(); ++i) {
+        for (int j = 0; j < board[i].size(); ++j) {
+            delete board[i][j];
+            board[i][j] = nullptr;
+        }
+    }
+    delete white; // delete players
+    delete black;
+
+    this->detach();
+
+    }
 };
+
+
 
 #endif
