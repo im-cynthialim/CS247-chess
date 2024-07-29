@@ -32,6 +32,9 @@ class Game : public Subject
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
     Player *playerTurn = nullptr;
     Colour startColour = WHITE;
+    bool pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay);
+    bool updateEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
+    bool executeEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
 
 public:
     STATUS status;
@@ -60,86 +63,7 @@ public:
         }
 
         // check for pawn promotion
-        bool pawnPromotionMove = false;
-        char promoteTo = 'p';
-
-        if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7)
-        { // check for black pawn promotion
-            string validPieces = "qrnb";
-
-            if (dynamic_cast<Human *>(playerTurn))
-            {
-                cin >> promoteTo;
-
-                while (validPieces.find(promoteTo) == string::npos)
-                {
-                    cout << "Invalid piece for promotion, choose again" << "\n";
-                    cin >> promoteTo;
-                }
-                pawnPromotionMove = true;
-            }
-            else
-            { // choose promotion piece if computer
-                promoteTo = 'q';
-            }
-        }
-        else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
-        { // check for white pawn promotion
-            string validPieces = "QRNB";
-            if (dynamic_cast<Human *>(playerTurn))
-            {
-                cin >> promoteTo;
-
-                while (validPieces.find(promoteTo) == string::npos)
-                {
-                    cout << "Invalid piece for promotion, choose again" << "\n";
-                    cin >> promoteTo;
-                }
-                pawnPromotionMove = true;
-            }
-            else
-            { // choose promotion piece if computer
-                promoteTo = 'Q';
-            }
-        }
-        if (pawnPromotionMove)
-        {
-            // replace pawn with piece chosen
-            delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
-
-            switch (tolower(promoteTo))
-            {
-
-            // queen
-            case 'q':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // knight
-            case 'n':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Knight(tolower(promoteTo) == 'n' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // bishop
-            case 'b':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Bishop(tolower(promoteTo) == 'b' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // rook
-            case 'r':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Rook(tolower(promoteTo) == 'r' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            default:
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-        }
+        bool wasPromoted = pawnPromotionMove(board, moveToPlay);
 
 
         //Castle stuffs: move the rook
@@ -160,51 +84,15 @@ public:
 
         //preform move on the board if its not pawn promotion (even if its castle, need to mov ethe king)
 
-        if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getFromX() == 1 && moveToPlay.getToX() == 3)
-            {
-                // if our move is a two-square move of a black pawn
-                if (moveToPlay.getToY() + 1 < 8 && board[moveToPlay.getToX()][moveToPlay.getToY() + 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() + 1]->getPieceType() == 'P')
-                {
-                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() + 1])->setPassant("left", true);
+        // check for en passant potential
+        bool enPassantPotential = updateEnPassant (board, moveToPlay);
 
-                }
+        // exec en Passant
 
-                if (moveToPlay.getToY() - 1 >= 0 && board[moveToPlay.getToX()][moveToPlay.getToY() - 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() - 1]->getPieceType() == 'P')
-                {
-                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("right", true);
-                }
-            }
-            else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getFromX() == 6 && moveToPlay.getToX() == 4)
-            {
-                // if our move is a two-square move of a white pawn
-                if (moveToPlay.getToY() + 1 < 8 && board[moveToPlay.getToX()][moveToPlay.getToY() + 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() + 1]->getPieceType() == 'p')
-                {
-                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() + 1])->setPassant("right", true);
-                }
-                if (moveToPlay.getToY() - 1 >= 0 && board[moveToPlay.getToX()][moveToPlay.getToY() - 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() - 1]->getPieceType() == 'p')
-                {
-                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("left", true);
-                }
-            }
+        bool execPassant = executeEnPassant (board, moveToPlay);
 
-        if ((moveToPlay.getFromX() == 3 || moveToPlay.getFromX() == 4) && tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'p' && moveToPlay.getToY() != moveToPlay.getFromY() && board[moveToPlay.getToX()][moveToPlay.getToY()] == nullptr) {
-            // making an en passant move
-            if (moveToPlay.getFromX() > moveToPlay.getToX()) {
-                delete board[moveToPlay.getToX() + 1][moveToPlay.getToY()]; // delete captured pawn
-                board[moveToPlay.getToX() + 1][moveToPlay.getToY()] = nullptr;
-            }
-            else {
-                delete board[moveToPlay.getToX() - 1][moveToPlay.getToY()]; // delete captured pawn
-                board[moveToPlay.getToX() - 1][moveToPlay.getToY()] = nullptr;
-            }
-            
-            board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
-
-
-
-        }
-        else if(!pawnPromotionMove) {
+       
+        if(!wasPromoted && !enPassantPotential && !execPassant) {
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
@@ -215,21 +103,19 @@ public:
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
-
-
         }
-        else{
+        // else{
 
-        board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
-        if (board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr)
-        {
-            delete board[moveToPlay.getToX()][moveToPlay.getToY()];
-            board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
-        }
-        board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-        board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+        // board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
+        // if (board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr)
+        // {
+        //     delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+        //     board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
+        // }
+        // board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+        // board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
-        }
+        // }
         // add the move to the pastMoves vector
         pastMoves.push_back(moveToPlay); // put latest move at beginning
 
