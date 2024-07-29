@@ -107,6 +107,10 @@ public:
 
             //STEP 3: Does my opponent have any possible moves? 
             vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
+                    //         cout << "moves of opp player:";
+                    // for (Move num : oppMoves) {
+                    //     num.getFields();
+                    // }
 
             // // //STEP 4: Outcome of this move
             if(oppMoves.size() == 0 && movePutACheck == true) {
@@ -275,29 +279,29 @@ public:
                         break;
                     // king
                     case 'k':
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'k' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = new King(pieceType == 'k' ? BLACK : WHITE, pieceType);
                         break;
                     // queen
                     case 'q':
                     {
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'q' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = new Queen(pieceType == 'q' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     // knight
                     case 'n':
                     {
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'n' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = new Knight(pieceType == 'n' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     // bishop
                     case 'b':
                     {
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = new Bishop(pieceType == 'b' ? BLACK : WHITE, pieceType);
                     }
                     // rook
                     case 'r':
                     {
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = new Rook(pieceType == 'r' ? BLACK : WHITE, pieceType);
                     }
                     default:
                         cerr << "Invalid command" << endl;

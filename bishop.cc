@@ -184,6 +184,4 @@ vector<Move> Bishop::possibleMoves(const vector<vector<Piece*>> &board, int row,
 
 }
 
-
-
 Bishop::~Bishop() {}
