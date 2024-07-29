@@ -147,7 +147,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //1)king cant be currently in check?
     //2)king cant have moved?
-    if(origKingPos.first != row || origKingPos.second != col && board[row][col]!= nullptr || isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved || origKingPos.first != row || origKingPos.second != col) {
+    if(origKingPos.first != row || origKingPos.second != col || (board[row][col]== nullptr) || isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved || origKingPos.first != row || origKingPos.second != col) {
         return validMoves;
     }
     
@@ -158,7 +158,6 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     board[origRookClosestPos.first][origRookClosestPos.second]->getPieceType() == rook && 
     board[origRookClosestPos.first][origRookClosestPos.second]->hasMoved == false
     ) {
-        // cout << "bad3";
         hasRookClosestMoved = false;
     }
 
