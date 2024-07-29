@@ -5,7 +5,7 @@
 #include "king.h"
 #include <algorithm>
 #include <iostream>
-#include "helperFuncs.cc"
+#include "helperFuncs.h"
 #include <cctype>
 using namespace std;
 
@@ -141,58 +141,110 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
         rook = 'r';
     }
 
+//______________________________________
+    //CASTLING 
+//______________________________________
 
-    // //CASTLING
-
-    // //1)king cant be currently in check?
-    // //2)king cant have moved?
-    // if(isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved) {
-    //     return validMoves;
-    // }
+    //1)king cant be currently in check?
+    //2)king cant have moved?
+    if(isKingInCheck(board[row][col]->getPieceType(), board) || this->hasMoved) {
+        return validMoves;
+    }
     
-    // //CASTLING CLOSEST TO KING
-    // //3)rook right of king cant have moved?
-    // bool hasRookClosestMoved = false;
-    // if(board[origRookClosestPos.first][origRookClosestPos.second] != nullptr && 
-    // board[origRookClosestPos.first][origRookClosestPos.second]->getPieceType() == rook && 
-    // board[origRookClosestPos.first][origRookClosestPos.second]->hasMoved == false
-    // ) {
-    //     hasRookClosestMoved = true;
-    // }
+    //CASTLING CLOSEST TO KING
+    //3)rook right of king cant have moved?
+    bool hasRookClosestMoved = false;
+    if(board[origRookClosestPos.first][origRookClosestPos.second] != nullptr && 
+    board[origRookClosestPos.first][origRookClosestPos.second]->getPieceType() == rook && 
+    board[origRookClosestPos.first][origRookClosestPos.second]->hasMoved == false
+    ) {
+        hasRookClosestMoved = true;
+    }
 
-    // //4)is there a piece in the position one right of king
-    // //5)is there a piece in the position two right from king 
+    //4)is there a piece in the position one right of king
+    //5)is there a piece in the position two right from king 
 
-    // //6)if the king is put one space over to the right, is it in check? (dont move rook)
-    // bool isKingOneRightChecked = false;
-    // vector<vector<Piece*>> simulateBoard = board;
-    // simulateBoard[row][col+1] = this;
-    // simulateBoard[row][col] = nullptr;
-    // if ((isKingInCheck(board[row][col+1]->getPieceType(), simulateBoard))) {
-    //     isKingOneRightChecked = true;
-    // }
+    //6)if the king is put one space over to the right, is it in check? (dont move rook)
+    bool isKingOneRightChecked = false;
+    vector<vector<Piece*>> simulateBoard = board;
+    simulateBoard[row][col+1] = this;
+    simulateBoard[row][col] = nullptr;
+    if ((isKingInCheck(board[row][col+1]->getPieceType(), simulateBoard))) {
+        isKingOneRightChecked = true;
+    }
 
-    // //7) if the king is moved two spaces over to the right, is it in check? (dont move rook)
-    // bool isKingTwoRightChecked = false;
-    // simulateBoard = board;
-    // simulateBoard[row][col+2] = this;
-    // simulateBoard[row][col] = nullptr;
-    // if ((isKingInCheck(board[row][col+2]->getPieceType(), simulateBoard))) {
-    //     isKingTwoRightChecked = true;
-    // }
+    //7) if the king is moved two spaces over to the right, is it in check? (dont move rook)
+    bool isKingTwoRightChecked = false;
+    simulateBoard = board;
+    simulateBoard[row][col+2] = this;
+    simulateBoard[row][col] = nullptr;
+    if ((isKingInCheck(board[row][col+2]->getPieceType(), simulateBoard))) {
+        isKingTwoRightChecked = true;
+    }
 
-    // //add castle closest to me
-    // if (
-    //     !hasRookClosestMoved && //rook closest hasn't move
-    //     board[origKingPos.first][origKingPos.second + 1] == nullptr && //no piece next to king on right
-    //     board[origKingPos.first][origKingPos.second + 2] == nullptr && //no piece to right of the king
-    //     !isKingOneRightChecked && 
-    //     !isKingTwoRightChecked
-    // ) {
-    //     validMoves.push_back(Move{row, col})
-    // }
+    if (
+        !hasRookClosestMoved && //rook closest hasn't move
+        board[origKingPos.first][origKingPos.second + 1] == nullptr && //no piece next to king on right
+        board[origKingPos.first][origKingPos.second + 2] == nullptr && //no piece to right of the king
+        !isKingOneRightChecked && 
+        !isKingTwoRightChecked
+    ) {
+        validMoves.push_back(Move{row, col, row, col+2}); //add castle closest
+    }
 
+    //CASTLING FARTHEST TO KING
+    //rook left of king cant have moved?
+    bool hasRookFarthestMoved = false;
+    if(board[origRookFarthestPos.first][origRookFarthestPos.second] != nullptr && 
+    board[origRookFarthestPos.first][origRookFarthestPos.second]->getPieceType() == rook && 
+    board[origRookFarthestPos.first][origRookFarthestPos.second]->hasMoved == false
+    ) {
+        hasRookFarthestMoved = true;
+    }
 
+    //is there a piece in the position one left of king
+    //is there a piece in the position two left from king 
+    //is there a piece in the position three left from king 
+    
+    //if the king is put one space over to the left, is it in check? (dont move rook)
+    bool isKingOneLeftChecked = false;
+    simulateBoard = board;
+    simulateBoard[row][col-1] = this;
+    simulateBoard[row][col] = nullptr;
+    if ((isKingInCheck(board[row][col-1]->getPieceType(), simulateBoard))) {
+        isKingOneLeftChecked = true;
+    }
+
+    //if the king is moved two spaces over to the right, is it in check? (dont move rook)
+    bool isKingTwoLeftChecked = false;
+    simulateBoard = board;
+    simulateBoard[row][col-2] = this;
+    simulateBoard[row][col] = nullptr;
+    if ((isKingInCheck(board[row][col-2]->getPieceType(), simulateBoard))) {
+        isKingTwoLeftChecked = true;
+    }
+
+    //if the king is moved two spaces over to the right, is it in check? (dont move rook)
+    bool isKingThreeLeftChecked = false;
+    simulateBoard = board;
+    simulateBoard[row][col-3] = this;
+    simulateBoard[row][col] = nullptr;
+    if ((isKingInCheck(board[row][col-3]->getPieceType(), simulateBoard))) {
+        isKingThreeLeftChecked = true;
+    }
+
+    //add castle farthest to me
+    if (
+        !hasRookFarthestMoved && //rook farthest hasn't move
+        board[origKingPos.first][origKingPos.second - 1] == nullptr && //no piece next to king on left
+        board[origKingPos.first][origKingPos.second - 2] == nullptr && //no piece two left of the king
+        board[origKingPos.first][origKingPos.second - 3] == nullptr && //no piece two left of the king
+        !isKingOneLeftChecked && 
+        !isKingTwoLeftChecked &&
+        !isKingThreeLeftChecked
+    ) {
+        validMoves.push_back(Move{row, col, row, col-2});
+    }
 
     return validMoves;
 };

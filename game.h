@@ -21,7 +21,7 @@
 #include "king.h"
 #include "rook.h"
 #include "subject.h"
-#include "helperFuncs.cc"
+#include "helperFuncs.h"
 
 using namespace std;
 
@@ -45,6 +45,11 @@ public:
             }
 
             //STEP 1: make the move on the board
+
+            //check is the move was a castle move and move the rook over also:
+
+            
+
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
                 board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
@@ -53,9 +58,9 @@ public:
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
+
             //add the move to the pastMoves vector
             pastMoves.push_back(moveToPlay); //put latest move at beginning
-
 
             //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
             bool movePutACheck = false;

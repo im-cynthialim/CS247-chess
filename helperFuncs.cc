@@ -1,6 +1,7 @@
 #include <vector>
 #include "enums.h"
 #include "piece.h"
+#include "helperFuncs.h"
 
 bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
         Colour kingColour = WHITE;
