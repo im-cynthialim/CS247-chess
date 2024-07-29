@@ -3,12 +3,6 @@
 #include "piece.h"
 #include <iostream>
 
-
-// virtual vector<Move> possibleMoves(vector<vector<Piece>>, int, int, int, int) = 0;
-
-// Piece (Colour colour, char pieceType);
-// vector<Move> listMoves (vector<vector<Piece>>, int, int, int, int);
-
 Piece::Piece (Colour colour, char pieceType) : colour{colour}, pieceType {pieceType} {}
 
 // getter for piecetype
