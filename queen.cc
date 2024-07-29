@@ -109,6 +109,7 @@ vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, i
             } else if (checkNextI < board.size() && checkNextJ < board.size() && checkNextJ >= 0 && board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move{curI, curJ, checkNextI, checkNextJ});
+                break;
             }
                else {
                 break;

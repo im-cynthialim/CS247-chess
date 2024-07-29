@@ -108,6 +108,7 @@ vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, 
             } else if (board[checkNextI][checkNextJ] != nullptr
             && board[checkNextI][checkNextJ]->getColour() != this->getColour()) {
                 moves.push_back(Move{curI, curJ, checkNextI, checkNextJ});
+                break;
             }
                else {
                 break;
