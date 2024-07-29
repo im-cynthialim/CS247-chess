@@ -4,13 +4,25 @@
 #include "move.h"
 #include "king.h"
 #include "piece.h"
+#include "helperFuncs.h"
 #include "pawn.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 // construct the pawn
 Pawn::Pawn(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
+
+void Pawn::setPassant(string dir, bool val) {
+    if (dir == "left") {
+        leftEnPassant = val;
+    }
+    else if (dir == "right") {
+        rightEnPassant = val;
+    }
+    return;
+}
 
 vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
     // return an array of moves for the pawn
@@ -53,6 +65,7 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
         }
     }
 
+
     // black pawn - moves down board
     if (this->getColour() == BLACK){ 
         // this is for checking to see if the piece does not go out of bounds and if next spot (jump one forward) is empty
@@ -84,6 +97,25 @@ vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
             moves.push_back(Move{curI, curJ, curI + 2, curJ});
         }
     }  
+
+    if (this->getColour() == WHITE) {
+        if (this->leftEnPassant) {
+            moves.push_back(Move{curI, curJ, curI-1, curJ-1});
+        }
+        if (this->rightEnPassant)
+            moves.push_back(Move{curI, curJ, curI-1, curJ+1});
+
+    }
+    if (this->getColour() == BLACK) {
+        if (leftEnPassant){
+            moves.push_back(Move{curI, curJ, curI+1, curJ+1});
+        }
+        if (rightEnPassant)
+        {
+            moves.push_back(Move{curI, curJ, curI+1, curJ-1});
+        }
+  
+    }
 
     return moves;
 };
@@ -140,5 +172,22 @@ vector<Move> Pawn::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     return validMoves;
 }
+
+// vector<Move> Pawn::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
+//     vector<Move> validMoves{};
+//     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
+
+//     //is this move going to cause the king to be in check? 
+//     for(int i = 0; i < potentialMoves.size(); i++) {
+//         vector<vector<Piece*>> simulateBoard = board;
+//         simulateBoard[row][col] = nullptr;
+//         simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()] = this; // put king in new potential place
+//         if (!isKingInCheck(simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()]->getPieceType(), simulateBoard)) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
+//             validMoves.push_back(potentialMoves[i]);
+//         }
+//     }
+
+// return validMoves;
+// }
 
 Pawn::~Pawn() {};

@@ -18,13 +18,13 @@ class Human : public Player
                 int fromRow;
                 char toCol;
                 int toRow;
+                string extraPawnPromotion;
                 
                 cin >> fromCol >> fromRow >> toCol >> toRow;
                 int fromRowLoc = 8 - fromRow;
                 int fromColLoc = fromCol - 'a';
                 int toRowLoc = 8 - toRow;
                 int toColLoc = toCol - 'a';
-
 
                 vector<Move> allValidMoves  = findAllMovesICanMake(board);
                 // vector<Move> allValidMoves = board.at(fromRowLoc).at(fromColLoc)->getPossibleMoves(board, fromRowLoc, fromColLoc);
@@ -44,8 +44,11 @@ class Human : public Player
                     }
                 }
                 cout << "You are not allowed to make that move. Enter a different one.\n";
-                string move;
-                cin >> move;
+
+                string move {};
+                while (move != "move") {
+                    cin >> move;
+                }
             }
         }
 

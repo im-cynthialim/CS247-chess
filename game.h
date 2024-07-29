@@ -22,7 +22,6 @@
 #include "rook.h"
 #include "subject.h"
 #include "helperFuncs.h"
-#include <cctype>
 
 using namespace std;
 
@@ -38,17 +37,32 @@ public:
     STATUS status;
     vector<Move> pastMoves;
 
-    void makeMove() {
+    void makeMove()
+    {
         Move moveToPlay = playerTurn->chooseMove(board);
 
-            Colour oppCol = WHITE;
-            if(playerTurn->getColour() == WHITE) {
-                oppCol = BLACK;
+        Colour oppCol = WHITE;
+        if (playerTurn->getColour() == WHITE)
+        {
+            oppCol = BLACK;
+        }
+
+
+
+        // STEP 1: make the move on the board
+
+        // reset en passant
+        for (size_t i = 0; i < board.size(); ++i) {
+            for (size_t j = 0; j < board.size(); ++j) {
+                if (board[i][j] != nullptr && tolower(board[i][j]->getPieceType() == 'p')) {
+                    static_cast<Pawn *>(board[i][j])->setPassant("left", false);
+                   static_cast<Pawn *>(board[i][j])->setPassant("right", false);
+                }
             }
+        }
 
-            //STEP 1: make the move on the board
-
-               bool pawnPromotionMove = false;
+        // check for pawn promotion
+        bool pawnPromotionMove = false;
         char promoteTo = 'p';
 
         if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7)
@@ -131,102 +145,161 @@ public:
                 break;
             }
         }
+        // Castle stuffs
+        // MOVE ROOK if the move is a castle
+        else if (
+            tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
+            abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2)
+        {
+            if (moveToPlay.getFromY() - moveToPlay.getToY() == 2)
+            { // king moves left (castle far)
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
+            }
+            else if (moveToPlay.getFromY() - moveToPlay.getToY() == -2)
+            { // king moves right (castle close)
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
+            }
+        }
+        else
+        {
 
+            if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getFromX() == 1 && moveToPlay.getToX() == 3)
+            {
+                // if our move is a two-square move of a black pawn
+                if (moveToPlay.getToY() + 1 < 8 && board[moveToPlay.getToX()][moveToPlay.getToY() + 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() + 1]->getPieceType() == 'P')
+                {
+                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() + 1])->setPassant("left", true);
 
-            //Castle stuffs
-            //MOVE ROOK if the move is a castle
-        else if(
-                tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
-                abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
-            ) {
-                if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
-                } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
-                    board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
+                }
+
+                if (moveToPlay.getToY() - 1 >= 0 && board[moveToPlay.getToX()][moveToPlay.getToY() - 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() - 1]->getPieceType() == 'P')
+                {
+                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("right", true);
                 }
             }
-
-        else {
-
-            
-
-            board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
-            if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
-                delete board[moveToPlay.getToX()][moveToPlay.getToY()];
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
-                
+            else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getFromX() == 6 && moveToPlay.getToX() == 4)
+            {
+                // if our move is a two-square move of a white pawn
+                if (moveToPlay.getToY() + 1 < 8 && board[moveToPlay.getToX()][moveToPlay.getToY() + 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() + 1]->getPieceType() == 'p')
+                {
+                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() + 1])->setPassant("right", true);
+                }
+                if (moveToPlay.getToY() - 1 >= 0 && board[moveToPlay.getToX()][moveToPlay.getToY() - 1] != nullptr && board[moveToPlay.getToX()][moveToPlay.getToY() - 1]->getPieceType() == 'p')
+                {
+                    static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("left", true);
+                }
             }
+        }
+
+        if ((moveToPlay.getFromX() == 3 || moveToPlay.getFromX() == 4) && tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'p' && moveToPlay.getToY() != moveToPlay.getFromY() && board[moveToPlay.getToX()][moveToPlay.getToY()] == nullptr) {
+            // making an en passant move
+            if (moveToPlay.getFromX() > moveToPlay.getToX()) {
+                delete board[moveToPlay.getToX() + 1][moveToPlay.getToY()]; // delete captured pawn
+                board[moveToPlay.getToX() + 1][moveToPlay.getToY()] = nullptr;
+            }
+            else {
+                delete board[moveToPlay.getToX() - 1][moveToPlay.getToY()]; // delete captured pawn
+                board[moveToPlay.getToX() - 1][moveToPlay.getToY()] = nullptr;
+            }
+            
             board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+
+
+
+        }
+        else{
+
+        board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
+        if (board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr)
+        {
+            delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+            board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
+        }
+        board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+        board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+
+        }
+        // add the move to the pastMoves vector
+        pastMoves.push_back(moveToPlay); // put latest move at beginning
+
+        // STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
+        bool movePutACheck = false;
+        char otherKing = 'k';
+        if (oppCol == WHITE)
+        {
+            otherKing = 'K';
         }
 
-            //add the move to the pastMoves vector
-            pastMoves.push_back(moveToPlay); //put latest move at beginning
-
-            //STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
-            bool movePutACheck = false;
-            char otherKing = 'k';
-            if (oppCol == WHITE) {
-                otherKing = 'K';
-            }
-
-            if (isKingInCheck(otherKing, board)) {
-                movePutACheck = true;
-            }
-
-
-            //STEP 3: Does my opponent have any possible moves? 
-            vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
-
-            //STEP 4: Outcome of this move
-            if(oppMoves.size() == 0 && movePutACheck == true) {
-                cout<<"Checkmate! "<< playerTurn->getColour()<<" Wins!\n";
-                if(playerTurn->getColour() == WHITE) {
-                    status = WHITEWINS;
-                } else {
-                    status = BLACKWINS;
-                }
-            } else if(oppMoves.size() == 0 && movePutACheck == false) {
-                cout<<"Stalement\n";
-                status = DRAW;
-            } else if(oppMoves.size() != 0 && movePutACheck == true) {
-                cout<< (oppCol == BLACK ? "Black" : "White") <<" is now in check\n";
-            }
-
-            // STEP 5: Change the playerTurn
-            if(playerTurn->getColour() == WHITE) {
-                playerTurn = black;
-            } else {
-                playerTurn = white;
-            }
-
-            // //UPDATE CHECK BOOL 
-            // if(movePutACheck) {
-            //     playerTurn->playerInCheck = true;
-            // } else {
-            //     playerTurn->playerInCheck = false;
-            // }
- 
-
-            notifyObservers();
+        if (isKingInCheck(otherKing, board))
+        {
+            movePutACheck = true;
         }
 
+        // STEP 3: Does my opponent have any possible moves?
+        vector<Move> oppMoves = playerTurn->findAllMovesOppCanMake(board);
+
+        // STEP 4: Outcome of this move
+        if (oppMoves.size() == 0 && movePutACheck == true)
+        {
+            cout << "Checkmate! " << playerTurn->getColour() << " Wins!\n";
+            if (playerTurn->getColour() == WHITE)
+            {
+                status = WHITEWINS;
+            }
+            else
+            {
+                status = BLACKWINS;
+            }
+        }
+        else if (oppMoves.size() == 0 && movePutACheck == false)
+        {
+            cout << "Stalement\n";
+            status = DRAW;
+        }
+        else if (oppMoves.size() != 0 && movePutACheck == true)
+        {
+            cout << (oppCol == BLACK ? "Black" : "White") << " is now in check\n";
+        }
+
+        // STEP 5: Change the playerTurn
+        if (playerTurn->getColour() == WHITE)
+        {
+            playerTurn = black;
+        }
+        else
+        {
+            playerTurn = white;
+        }
+
+        // //UPDATE CHECK BOOL
+        // if(movePutACheck) {
+        //     playerTurn->playerInCheck = true;
+        // } else {
+        //     playerTurn->playerInCheck = false;
+        // }
+
+        notifyObservers();
+    }
 
     char getState(int row, int col) const override;
-    void resign() {
-        //the cur player is resigning
-        if(playerTurn->getColour() == BLACK) {
+    void resign()
+    {
+        // the cur player is resigning
+        if (playerTurn->getColour() == BLACK)
+        {
             status = WHITEWINS;
             cout << "white wins\n";
-        } else {
+        }
+        else
+        {
             status = BLACKWINS;
             cout << "black wins\n";
         }
-
     }
 
     // void resetGame();
@@ -243,7 +316,7 @@ public:
         if (!gameCreatedViaSetup)
         {
             // set up default piece positions
-            //black pieces
+            // black pieces
             board[0][0] = new Rook(BLACK, 'r');
             board[0][1] = new Knight(BLACK, 'n');
             board[0][2] = new Bishop(BLACK, 'b');
@@ -253,7 +326,8 @@ public:
             board[0][6] = new Knight(BLACK, 'n');
             board[0][7] = new Rook(BLACK, 'r');
             // black pawns
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 8; ++i)
+            {
                 board[1][i] = new Pawn(BLACK, 'p');
             }
             // white pieces
@@ -266,18 +340,21 @@ public:
             board[7][6] = new Knight(WHITE, 'N');
             board[7][7] = new Rook(WHITE, 'R');
             // white pawns
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 8; ++i)
+            {
                 board[6][i] = new Pawn(WHITE, 'P');
             }
         }
 
-        if (startColour == BLACK) {
+        if (startColour == BLACK)
+        {
             playerTurn = black;
-        } else {
+        }
+        else
+        {
             playerTurn = white;
         }
     }
-
 
     void addPlayersToGame(const string &whiteType, const string &blackType)
     {
@@ -317,7 +394,8 @@ public:
 
     void setup()
     {
-        if (status == RUNNING) {
+        if (status == RUNNING)
+        {
             cout << "Cannot enter setup mode, game in progress";
         }
 
@@ -377,11 +455,13 @@ public:
                     case 'b':
                     {
                         board[rowLoc][colLoc] = new Bishop(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                        break;
                     }
                     // rook
                     case 'r':
                     {
                         board[rowLoc][colLoc] = new Rook(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                        break;
                     }
                     default:
                         cerr << "Invalid command" << endl;
@@ -397,8 +477,8 @@ public:
 
                 int rowLoc = 8 - pieceRow;
                 int colLoc = pieceCol - 'a';
-                
-                    if (rowLoc < 0 || rowLoc >= 8 || colLoc < 0 || colLoc >= 8)
+
+                if (rowLoc < 0 || rowLoc >= 8 || colLoc < 0 || colLoc >= 8)
                 {
                     cout << "Invalid board position" << "\n";
                 }
@@ -462,8 +542,7 @@ public:
                     numWhiteKings != 1 ||
                     pawnWrongSpot == true ||
                     isKingInCheck('k', board) ||
-                    isKingInCheck('K', board)
-                )
+                    isKingInCheck('K', board))
                 {
                     cout << "Cannot exit setup mode. You have: " << "\n";
                     cout << (numBlackKings != 1 ? (to_string(numBlackKings) + " black Kings") : "") << "\n";
