@@ -73,6 +73,12 @@ int main () {
         else if (command == "resign") {
             if (game) {
                 game->resign();
+                if (game->status == BLACKWINS) {
+                    blackScore++;
+                } else {
+                    whiteScore++;
+                }
+                //update who won
                 delete game; // Game is done
                 game = new Game(); // Create a fresh game
                 new TextObserver(game);
