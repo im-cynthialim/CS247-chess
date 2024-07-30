@@ -33,7 +33,7 @@ class Game : public Subject
     Player *playerTurn = nullptr;
     Colour startColour = WHITE;
     bool pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay);
-    bool updateEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
+    void updateEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
     bool executeEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
 
 public:
@@ -80,11 +80,11 @@ public:
         }
 
         bool wasPromoted = pawnPromotionMove(board, moveToPlay); // check for pawn promotion
-        bool enPassantPotential = updateEnPassant (board, moveToPlay); // check for en passant potential
+        updateEnPassant (board, moveToPlay); // check for en passant potential
         bool execPassant = executeEnPassant (board, moveToPlay); // exec en Passant
 
         //preform move on the board if its not pawn promotion (even if its castle, need to mov ethe king)
-        if(!wasPromoted && !enPassantPotential && !execPassant) {
+        if(!wasPromoted && !execPassant) {
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
                 delete board[moveToPlay.getToX()][moveToPlay.getToY()];
