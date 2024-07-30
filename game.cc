@@ -12,7 +12,7 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
        char promoteTo = 'p';
        bool pawnPromotion = false;
 
-    if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7)
+    if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7 && moveToPlay.getFromX()) {
             if (dynamic_cast<Human *>(playerTurn))
             {
                 cin >> promoteTo;
@@ -27,9 +27,10 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
             else
             { // choose promotion piece if computer
                 promoteTo = 'q';
+                pawnPromotion = true;
             }
-
-        else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
+    }
+    else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
         { // check for white pawn promotion
             string validPieces = "QRNB";
             if (dynamic_cast<Human *>(playerTurn))
@@ -43,12 +44,13 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
                 }
                 pawnPromotion = true;
             }
-        }
         else
         { // choose promotion piece if computer
             promoteTo = 'Q';
             pawnPromotion = true;
         }
+    }
+    
 
         if (pawnPromotion) {
           switch (tolower(promoteTo))
