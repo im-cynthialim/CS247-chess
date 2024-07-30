@@ -29,6 +29,14 @@ bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
                 if(piece != nullptr && piece->getColour() != kingColour) { //other guys piece from the king
                     //find all LINES OF SIGHT moves of other guys pieces on the board
                     vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);
+
+                    // if(piece->getPieceType() == 'q') {
+                    //     for(Move num: possibleMoves) {
+                    //         num.getFields();
+                    //     }
+                    // }
+
+
                     for (size_t j = 0; j < possibleMoves.size(); ++j) {
                         if(possibleMoves[j].getToX() == kingPosX && possibleMoves[j].getToY() == kingPosY) {
                             return true;

@@ -7,66 +7,82 @@
 #include "piece.h"
 #include "textobserver.h"
 
-
 int main () {
     int whiteScore = 0;
     int blackScore = 0;
 
     Game *game = new Game;
-    new TextObserver(game);
+    TextObserver *observer = new TextObserver(game);
     game->notifyObservers();
 
     std::string command;
 
-    while (std::cin >> command) {
+    while (std::cin >> command) {   
         // Parse the command and execute the appropriate action
         if (command == "game") {
-
-            if(game->status == RUNNING) {
-                delete game;
-                game = new Game(); //create a fresh game and the delete the old one
+            if(game) {
+                delete game; // Clean up the old game
+                game = new Game(); // Create a fresh game
+                // delete observer; // Clean up the old observer
+                // observer = new TextObserver(game); // Attach a new observer
             }
 
-            string whitePlayer, blackPlayer;
-            cin >> whitePlayer >> blackPlayer;
+            std::string whitePlayer, blackPlayer;
+            std::cin >> whitePlayer >> blackPlayer;
             // Extract player types and start a new game
             game->setUpGame(whitePlayer, blackPlayer);
             game->notifyObservers();
         }
-
         else if (command == "setup") {
-            game->setup();
+            if (game) {
+                game->setup();
+            } else {
+                std::cout << "No game in progress.\n";
+            }
         }
-        
-        
         else if (command == "move") {
-            game->makeMove();
-            if(game->status == WHITEWINS) {
-                whiteScore++;
-                delete game; //game is done 
-                game = new Game(); //create a fresh game and the delete the old one
-            } else if(game->status == BLACKWINS) {
-                blackScore++;
-                delete game; //game is done 
-                game = new Game(); //create a fresh game and the delete the old one
-            } else if(game->status == DRAW) {
-                whiteScore++;
-                blackScore++;
-                delete game; //game is done 
-                game = new Game(); //create a fresh game and the delete the old one
+            if (game) {
+                game->makeMove();
+                if (game->status == WHITEWINS) {
+                    whiteScore++;
+                    delete game; // Game is done
+                    game = new Game(); // Create a fresh game
+                    // delete observer; // Clean up the old observer
+                    // observer = new TextObserver(game); // Attach a new observer
+                } else if (game->status == BLACKWINS) {
+                    blackScore++;
+                    delete game; // Game is done
+                    game = new Game(); // Create a fresh game
+                    // delete observer; // Clean up the old observer
+                    // observer = new TextObserver(game); // Attach a new observer
+                } else if (game->status == DRAW) {
+                    whiteScore++;
+                    blackScore++;
+                    delete game; // Game is done
+                    game = new Game(); // Create a fresh game
+                    // delete observer; // Clean up the old observer
+                    // observer = new TextObserver(game); // Attach a new observer
+                }
+            } else {
+                std::cout << "No game in progress.\n";
             }
         } 
         else if (command == "resign") {
             if (game) {
                 game->resign();
-                delete game; //game is done 
-                game = new Game(); //create a fresh game and the delete the old one
+                delete game; // Game is done
+                game = new Game(); // Create a fresh game
+                // delete observer; // Clean up the old observer
+                // observer = new TextObserver(game); // Attach a new observer
             } else {
                 std::cout << "No game in progress.\n";
             }
         } 
     }
+
+    std::cout << "WhiteScore: " << whiteScore << "\n";
+    std::cout << "BlackScore: " << blackScore << "\n";
+
     delete game;
+    delete observer;
 }
-
-

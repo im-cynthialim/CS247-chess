@@ -27,11 +27,6 @@ class Human : public Player
                 int toColLoc = toCol - 'a';
 
                 vector<Move> allValidMoves  = findAllMovesICanMake(board);
-                // vector<Move> allValidMoves = board.at(fromRowLoc).at(fromColLoc)->getPossibleMoves(board, fromRowLoc, fromColLoc);
-                // cout << "allvalidMoves:";
-                //     for (Move num : allValidMoves) {
-                //         num.getFields();
-                //     }
                 
                 for (size_t i = 0; i < allValidMoves.size(); ++i) {
                     if (

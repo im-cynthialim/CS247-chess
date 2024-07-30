@@ -15,7 +15,7 @@ class Piece {
     
     virtual vector<Move> possibleMoves(const vector<vector<Piece*>>& board, int row, int col) {
            vector<Move> validMoves{};
-            vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
+            vector<Move> potentialMoves = this->lineOfSight(board, row, col);  //get general moves of a pieces
 
             int kingX, kingY;
             // find curPlayer king's position

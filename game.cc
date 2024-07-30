@@ -92,6 +92,10 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
 }
 
 bool Game::updateEnPassant(vector<vector<Piece*>> &board, Move moveToPlay) {
+    if(board[moveToPlay.getFromX()][moveToPlay.getFromY()] == nullptr) {
+        return false;
+    }
+
       if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getFromX() == 1 && moveToPlay.getToX() == 3)
             {
                 // if our move is a two-square move of a black pawn
@@ -105,6 +109,7 @@ bool Game::updateEnPassant(vector<vector<Piece*>> &board, Move moveToPlay) {
             {
                 static_cast<Pawn *>(board[moveToPlay.getToX()][moveToPlay.getToY() - 1])->setPassant("right", true);
             }
+            return true;
         }
         else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getFromX() == 6 && moveToPlay.getToX() == 4)
         {

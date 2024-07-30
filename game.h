@@ -52,20 +52,6 @@ public:
 
         //STEP 1: make the move on the board
 
-        // reset en passant
-        for (size_t i = 0; i < board.size(); ++i) {
-            for (size_t j = 0; j < board.size(); ++j) {
-                if (board[i][j] != nullptr && tolower(board[i][j]->getPieceType() == 'p')) {
-                    static_cast<Pawn *>(board[i][j])->setPassant("left", false);
-                   static_cast<Pawn *>(board[i][j])->setPassant("right", false);
-                }
-            }
-        }
-
-        // check for pawn promotion
-        bool wasPromoted = pawnPromotionMove(board, moveToPlay);
-
-
         //Castle stuffs: move the rook
         if(
             tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
@@ -82,16 +68,22 @@ public:
             }
         }
 
+
+        // reset en passant
+        for (size_t i = 0; i < board.size(); ++i) {
+            for (size_t j = 0; j < board.size(); ++j) {
+                if (board[i][j] != nullptr && tolower(board[i][j]->getPieceType() == 'p')) {
+                    static_cast<Pawn *>(board[i][j])->setPassant("left", false);
+                   static_cast<Pawn *>(board[i][j])->setPassant("right", false);
+                }
+            }
+        }
+
+        bool wasPromoted = pawnPromotionMove(board, moveToPlay); // check for pawn promotion
+        bool enPassantPotential = updateEnPassant (board, moveToPlay); // check for en passant potential
+        bool execPassant = executeEnPassant (board, moveToPlay); // exec en Passant
+
         //preform move on the board if its not pawn promotion (even if its castle, need to mov ethe king)
-
-        // check for en passant potential
-        bool enPassantPotential = updateEnPassant (board, moveToPlay);
-
-        // exec en Passant
-
-        bool execPassant = executeEnPassant (board, moveToPlay);
-
-       
         if(!wasPromoted && !enPassantPotential && !execPassant) {
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
@@ -104,18 +96,7 @@ public:
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
         }
-        // else{
 
-        // board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
-        // if (board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr)
-        // {
-        //     delete board[moveToPlay.getToX()][moveToPlay.getToY()];
-        //     board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
-        // }
-        // board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-        // board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
-
-        // }
         // add the move to the pastMoves vector
         pastMoves.push_back(moveToPlay); // put latest move at beginning
 

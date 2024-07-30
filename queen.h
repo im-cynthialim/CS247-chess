@@ -7,7 +7,6 @@ using namespace std;
 
 class Queen : public Piece {
     vector<Move> lineOfSight(const vector<vector<Piece*>> &, int, int) override;
-    // vector<Move> possibleMoves(const vector<vector<Piece*>> &, int, int) override;
     public:
         Queen(Colour c, char pieceType);
         virtual ~Queen();
