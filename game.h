@@ -115,14 +115,15 @@ public:
         // STEP 4: Outcome of this move
         if (oppMoves.size() == 0 && movePutACheck == true)
         {
-            cout << "Checkmate! " << playerTurn->getColour() << " Wins!\n";
             if (playerTurn->getColour() == WHITE)
             {
                 status = WHITEWINS;
+                cout << "Checkmate! White wins!\n";
             }
             else
             {
                 status = BLACKWINS;
+                cout << "Checkmate! Black wins!\n";
             }
         }
         else if (oppMoves.size() == 0 && movePutACheck == false)

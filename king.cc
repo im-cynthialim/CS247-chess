@@ -12,8 +12,6 @@ using namespace std;
 // construct King object
 King::King(Colour c, char pieceType): Piece{c, pieceType} {}
 
-
-
 vector<Move> King::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
 
     vector<Move> moves = {};
