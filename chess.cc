@@ -38,6 +38,7 @@ int main () {
             std::cin >> whitePlayer >> blackPlayer;
             // Extract player types and start a new game
             game->setUpGame(whitePlayer, blackPlayer);
+
             game->notifyObservers();
         }
         else if (command == "setup") {
@@ -54,21 +55,21 @@ int main () {
                     whiteScore++;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    // new TextObserver(game);
-                    // new GraphicsObserver(game);
+                    new TextObserver(game);
+                    new GraphicsObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    // new TextObserver(game);
-                    // new GraphicsObserver(game);
+                    new TextObserver(game);
+                    new GraphicsObserver(game);
                 } else if (game->status == DRAW) {
                     whiteScore = whiteScore + 0.5;
                     blackScore = blackScore + 0.5;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    // new TextObserver(game);
-                    // new GraphicsObserver(game);
+                    new TextObserver(game);
+                    new GraphicsObserver(game);
                 }
             } else {
                 std::cout << "No game in progress.\n";
@@ -85,8 +86,8 @@ int main () {
                 //update who won
                 // delete game; // Game is done
                 game = std::make_shared<Game>(); // Create a fresh game
-                // new TextObserver(game);
-                // new GraphicsObserver(game);
+                new TextObserver(game);
+                new GraphicsObserver(game);
             } else {
                 std::cout << "No game in progress.\n";
             }
@@ -95,5 +96,4 @@ int main () {
 
     std::cout << "WhiteScore: " << whiteScore << "\n";
     std::cout << "BlackScore: " << blackScore << "\n";
-    delete game;
 }
