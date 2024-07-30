@@ -246,10 +246,6 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
         validMoves.push_back(Move{row, col, row, col-2});
     }
 
-    // for (Move num: validMoves) {
-    //     num.getFields();
-    // }
-
     return validMoves;
 };
 

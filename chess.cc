@@ -8,8 +8,8 @@
 #include "textobserver.h"
 
 int main () {
-    int whiteScore = 0;
-    int blackScore = 0;
+    float whiteScore = 0;
+    float blackScore = 0;
 
     Game *game = new Game;
     new TextObserver(game);
@@ -20,7 +20,7 @@ int main () {
     while (std::cin >> command) {   
         // Parse the command and execute the appropriate action
         if (command == "game") {
-            if(game) {
+            if(game->status != NOTSTARTED) { //if the game has already started and you run "game" --> then replace the game
                 delete game; // Clean up the old game
                 game = new Game(); // Create a fresh game
                 new TextObserver(game);
@@ -53,8 +53,8 @@ int main () {
                     game = new Game(); // Create a fresh game
                     new TextObserver(game);
                 } else if (game->status == DRAW) {
-                    whiteScore++;
-                    blackScore++;
+                    whiteScore = whiteScore + 0.5;
+                    blackScore = blackScore + 0.5;
                     delete game; // Game is done
                     game = new Game(); // Create a fresh game
                     new TextObserver(game);

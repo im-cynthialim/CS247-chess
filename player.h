@@ -47,32 +47,15 @@ class Player
         virtual Move chooseMove(const vector<vector<Piece*>>& board) = 0;
 
         vector<Move> findChecks(const vector<vector<Piece*>>& board) {
-            //find all of the moves I can make that will put their king in check 
+            //this method find all of the moves I can make that will put their king in check 
             char otherKing = 'K';
             if (colour == WHITE) {
                 otherKing = 'k';
             }
 
-            int otherKingPosX;
-            int otherKingPosY;
-
             vector<Move> allCheckMoves = {};
 
-            //step 1: find position of their king
-            for (size_t row = 0; row < board.size(); ++row) {
-                for (size_t col = 0; col < board[row].size(); ++col) {
-                    Piece* piece = board[row][col];
-                    if(piece != nullptr)  {
-                        if(piece->getPieceType() == otherKing) {
-                            otherKingPosX = row;
-                            otherKingPosY = col;
-                        }
-                    }
-                }
-            }
-
-            //step 2: For each of my possible moves, find whether the other king is in check from this move
-            //for each of my PIECES, see if it can reach the king
+            //For each of my possible moves, find whether the other king is in check from this move
             vector<Move> allMovesICanMake = findAllMovesICanMake(board);
             for (size_t i = 0; i < allMovesICanMake.size(); ++i) {
                 //simulate the board if this move was made 
@@ -80,23 +63,8 @@ class Player
                 boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]; //simulate moving the piece over
                 boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()] = nullptr;
 
-                for (size_t row = 0; row < 8; ++row) {
-                    for (size_t col = 0; col < 8; ++col) {
-                        Piece* piece = boardCopy[row][col];
-                        if(piece != nullptr && piece->getColour() == this->colour) {
-                            //find all LINES OF SIGHT moves of this piece now that the move was simulated
-                            vector<Move> possibleMoves = boardCopy[row][col]->getLineOfSightMoves(boardCopy, row, col);
-                            for (size_t j = 0; j < possibleMoves.size(); ++j) {
-                                if(possibleMoves[j].getToX() == otherKingPosX && possibleMoves[j].getToY() == otherKingPosY) {
-                                    allCheckMoves.push_back(allMovesICanMake[i]);
-                                    j = possibleMoves.size();
-                                    col = 8;
-                                    row = 8;
-                                    //this move has been added. no need to keep checking if we should add it
-                                }
-                            }
-                        }
-                    }
+                if(isKingInCheck(otherKing, boardCopy)) {
+                    allCheckMoves.push_back(allMovesICanMake[i]);
                 }
             }
             return allCheckMoves;

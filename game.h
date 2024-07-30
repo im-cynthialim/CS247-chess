@@ -37,8 +37,7 @@ class Game : public Subject
     bool executeEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
 
 public:
-    STATUS status;
-    vector<Move> pastMoves;
+    STATUS status = NOTSTARTED;
 
     void makeMove()
     {
@@ -96,9 +95,6 @@ public:
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
         }
-
-        // add the move to the pastMoves vector
-        pastMoves.push_back(moveToPlay); // put latest move at beginning
 
         // STEP 2: DID THE MOVE CAUSE A CHECK TO OTHER KING
         bool movePutACheck = false;
