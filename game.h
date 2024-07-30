@@ -12,6 +12,7 @@
 #include "computerOne.h"
 #include "computerTwo.h"
 #include "computerThree.h"
+#include "computerFour.h"
 #include "piece.h"
 #include "move.h"
 #include "enums.h"
@@ -171,7 +172,7 @@ public:
     bool gameCreatedViaSetup = false;
 
     // default constructor
-    Game() : status{NOTSTARTED} {}
+    // Game() : status{NOTSTARTED} {}
 
     void setUpGame(const string &whiteType, const string &blackType)
     {
@@ -243,6 +244,11 @@ public:
             white = make_shared<ComputerThree>(WHITE);
             // white = new ComputerThree(WHITE);
         }
+        else if (whiteType == "computer4")
+        {
+            white = make_shared<ComputerFour>(WHITE);
+            // white = new ComputerThree(WHITE);
+        }
         if (blackType == "human")
         {
             black = make_shared<Human>(BLACK);
@@ -261,6 +267,11 @@ public:
         else if (blackType == "computer3")
         {
             black = make_shared<ComputerThree>(BLACK);
+            // black = new ComputerThree(BLACK);
+        }
+        else if (blackType == "computer4")
+        {
+            black = make_shared<ComputerFour>(BLACK);
             // black = new ComputerThree(BLACK);
         }
     }

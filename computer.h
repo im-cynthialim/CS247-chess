@@ -16,6 +16,7 @@ class Computer : public Player
         vector<Move> findCaptures(const vector<vector<Piece*>>& board);
         vector<Move> avoidCaptures(const vector<vector<Piece*>>& board);
         virtual Move chooseMove(const vector<vector<Piece*>>& board) = 0;
+        vector<Move> findMostValuableCaptures(const vector<vector<Piece*>>& board);
 };
 
 #endif
