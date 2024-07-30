@@ -6,14 +6,17 @@
 #include "player.h"
 #include "piece.h"
 #include "textobserver.h"
+#include "graphicsobserver.h"
 
 int main () {
     float whiteScore = 0;
     float blackScore = 0;
 
-    Game *game = new Game;
-    new TextObserver(game);
-    game->notifyObservers();
+    // Game *game = new Game;
+    std::unique_ptr<Game> game = std::make_unique<Game>();
+    // new TextObserver(game);
+    // new GraphicsObserver(game);
+    // game->notifyObservers();
 
     std::string command;
 
@@ -40,18 +43,18 @@ int main () {
             }
         }
         else if (command == "move") {
-            if (game) {
+            if (game) { 
                 game->makeMove();
                 if (game->status == WHITEWINS) {
                     whiteScore++;
-                    delete game; // Game is done
-                    game = new Game(); // Create a fresh game
-                    new TextObserver(game);
+                    // delete game; // Game is done
+                    // game = new Game(); // Create a fresh game
+                    // new TextObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
-                    delete game; // Game is done
-                    game = new Game(); // Create a fresh game
-                    new TextObserver(game);
+                    // delete game; // Game is done
+                    // game = new Game(); // Create a fresh game
+                    // new TextObserver(game);
                 } else if (game->status == DRAW) {
                     whiteScore = whiteScore + 0.5;
                     blackScore = blackScore + 0.5;
@@ -72,9 +75,9 @@ int main () {
                     whiteScore++;
                 }
                 //update who won
-                delete game; // Game is done
-                game = new Game(); // Create a fresh game
-                new TextObserver(game);
+                // delete game; // Game is done
+                // game = new Game(); // Create a fresh game
+                // new TextObserver(game);
             } else {
                 std::cout << "No game in progress.\n";
             }
@@ -84,5 +87,5 @@ int main () {
     std::cout << "WhiteScore: " << whiteScore << "\n";
     std::cout << "BlackScore: " << blackScore << "\n";
 
-    delete game;
+    // delete game;
 }
