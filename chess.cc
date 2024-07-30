@@ -24,8 +24,6 @@ int main () {
                 delete game; // Clean up the old game
                 game = new Game(); // Create a fresh game
                 new TextObserver(game);
-                // delete observer; // Clean up the old observer
-                // observer = new TextObserver(game); // Attach a new observer
             }
 
             std::string whitePlayer, blackPlayer;
@@ -46,25 +44,20 @@ int main () {
                 game->makeMove();
                 if (game->status == WHITEWINS) {
                     whiteScore++;
-                    // delete game; // Game is done
+                    delete game; // Game is done
                     game = new Game(); // Create a fresh game
-                    // delete observer; // Clean up the old observer
-                    // observer = new TextObserver(game); // Attach a new observer
+                    new TextObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
                     delete game; // Game is done
                     game = new Game(); // Create a fresh game
                     new TextObserver(game);
-                    // delete observer; // Clean up the old observer
-                    // observer = new TextObserver(game); // Attach a new observer
                 } else if (game->status == DRAW) {
                     whiteScore++;
                     blackScore++;
                     delete game; // Game is done
                     game = new Game(); // Create a fresh game
                     new TextObserver(game);
-                    // delete observer; // Clean up the old observer
-                    // observer = new TextObserver(game); // Attach a new observer
                 }
             } else {
                 std::cout << "No game in progress.\n";
@@ -82,8 +75,6 @@ int main () {
                 delete game; // Game is done
                 game = new Game(); // Create a fresh game
                 new TextObserver(game);
-                // delete observer; // Clean up the old observer
-                // observer = new TextObserver(game); // Attach a new observer
             } else {
                 std::cout << "No game in progress.\n";
             }
@@ -94,5 +85,4 @@ int main () {
     std::cout << "BlackScore: " << blackScore << "\n";
 
     delete game;
-    // delete observer;
 }
