@@ -13,9 +13,8 @@ int main () {
     float blackScore = 0;
 
     Game *game = new Game;
-    // std::unique_ptr<Game> game = std::make_unique<Game>();
     new TextObserver(game);
-    // new GraphicsObserver(game);
+    new GraphicsObserver(game);
     game->notifyObservers();
 
     std::string command;
@@ -27,6 +26,7 @@ int main () {
                 delete game; // Clean up the old game
                 game = new Game(); // Create a fresh game
                 new TextObserver(game);
+                new GraphicsObserver(game);
             }
 
             std::string whitePlayer, blackPlayer;
@@ -47,20 +47,23 @@ int main () {
                 game->makeMove();
                 if (game->status == WHITEWINS) {
                     whiteScore++;
-                    // delete game; // Game is done
-                    // game = new Game(); // Create a fresh game
-                    // new TextObserver(game);
+                    delete game; // Game is done
+                    game = new Game(); // Create a fresh game
+                    new TextObserver(game);
+                    new GraphicsObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
-                    // delete game; // Game is done
-                    // game = new Game(); // Create a fresh game
-                    // new TextObserver(game);
+                    delete game; // Game is done
+                    game = new Game(); // Create a fresh game
+                    new TextObserver(game);
+                    new GraphicsObserver(game);
                 } else if (game->status == DRAW) {
                     whiteScore = whiteScore + 0.5;
                     blackScore = blackScore + 0.5;
                     delete game; // Game is done
                     game = new Game(); // Create a fresh game
                     new TextObserver(game);
+                    new GraphicsObserver(game);
                 }
             } else {
                 std::cout << "No game in progress.\n";
@@ -75,9 +78,10 @@ int main () {
                     whiteScore++;
                 }
                 //update who won
-                // delete game; // Game is done
-                // game = new Game(); // Create a fresh game
-                // new TextObserver(game);
+                delete game; // Game is done
+                game = new Game(); // Create a fresh game
+                new TextObserver(game);
+                new GraphicsObserver(game);
             } else {
                 std::cout << "No game in progress.\n";
             }
@@ -86,6 +90,5 @@ int main () {
 
     std::cout << "WhiteScore: " << whiteScore << "\n";
     std::cout << "BlackScore: " << blackScore << "\n";
-
-    // delete game;
+    delete game;
 }
