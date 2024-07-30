@@ -56,6 +56,12 @@ class ComputerFour : public Computer
                 return movesToChoose.at(randomNumber);
             }
 
+            //avoidBeingCaptured
+            if(avoidCaptureMoves.size() > 0) {
+                int randomNumber = std::rand() % avoidCaptureMoves.size();
+                return avoidCaptureMoves.at(randomNumber); //this is going to be the best move since it's closest to the front of captureMoves
+            }
+
             //intersect put king in check and make a capture
             for (const auto& move1 : checkMoves) {
                 for (const auto& move2 : captureMoves) {
@@ -68,12 +74,6 @@ class ComputerFour : public Computer
             //capture moves
             if(captureMoves.size() > 0) {
                 return captureMoves.at(0); 
-            }
-
-            //avoidBeingCaptured
-            if(avoidCaptureMoves.size() > 0) {
-                int randomNumber = std::rand() % avoidCaptureMoves.size();
-                return avoidCaptureMoves.at(randomNumber); //this is going to be the best move since it's closest to the front of captureMoves
             }
 
             //check moves
