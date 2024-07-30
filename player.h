@@ -4,6 +4,7 @@
 #include <vector>
 #include "enums.h"
 #include "piece.h"
+#include "queen.h"
 #include "move.h"
 #include <iostream>
 
@@ -62,6 +63,22 @@ class Player
                 std::vector<std::vector<Piece*>> boardCopy = board; 
                 boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]; //simulate moving the piece over
                 boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()] = nullptr;
+
+                //if the move you made was a pawn promotion, the simulated board should be a queen
+                if(
+                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'P' &&
+                    allMovesICanMake[i].getToX() == 0
+                ) {
+                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(WHITE, 'P');
+                }
+                else if(
+                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'p' &&
+                    allMovesICanMake[i].getToX() == 7
+                ) {
+                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(BLACK, 'p');
+                }
+                //
+
 
                 if(isKingInCheck(otherKing, boardCopy)) {
                     allCheckMoves.push_back(allMovesICanMake[i]);
