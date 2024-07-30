@@ -41,33 +41,32 @@ int main () {
             game->notifyObservers();
         }
         else if (command == "setup") {
-            if (game) {
-                
+            if (game->status == NOTSTARTED) {
                 game->setup();
             } else {
                 std::cout << "No game in progress.\n";
             }
         }
         else if (command == "move") {
-            if (game) { 
+            if (game->status == RUNNING) { 
                 game->makeMove();
                 if (game->status == WHITEWINS) {
                     whiteScore++;
                     // delete game; // Game is done
-                    // game = std::make_shared<Game>(); // Create a fresh game
+                    game = std::make_shared<Game>(); // Create a fresh game
                     // new TextObserver(game);
                     // new GraphicsObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
                     // delete game; // Game is done
-                    // game = std::make_shared<Game>(); // Create a fresh game
+                    game = std::make_shared<Game>(); // Create a fresh game
                     // new TextObserver(game);
                     // new GraphicsObserver(game);
                 } else if (game->status == DRAW) {
                     whiteScore = whiteScore + 0.5;
                     blackScore = blackScore + 0.5;
                     // delete game; // Game is done
-                    // game = std::make_shared<Game>(); // Create a fresh game
+                    game = std::make_shared<Game>(); // Create a fresh game
                     // new TextObserver(game);
                     // new GraphicsObserver(game);
                 }
@@ -76,7 +75,7 @@ int main () {
             }
         } 
         else if (command == "resign") {
-            if (game) {
+            if (game->status == RUNNING) {
                 game->resign();
                 if (game->status == BLACKWINS) {
                     blackScore++;
@@ -96,6 +95,5 @@ int main () {
 
     std::cout << "WhiteScore: " << whiteScore << "\n";
     std::cout << "BlackScore: " << blackScore << "\n";
-
-    // delete game;
+    delete game;
 }
