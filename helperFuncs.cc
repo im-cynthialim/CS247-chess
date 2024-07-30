@@ -47,4 +47,4 @@ bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
         }
         return false;
     }
-    
+
