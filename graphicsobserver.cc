@@ -6,8 +6,8 @@
 
 using namespace std;
 
-GraphicsObserver::GraphicsObserver(Game *game) :
-trackGame{game} {
+GraphicsObserver::GraphicsObserver(shared_ptr<Game> game) :
+trackGame{move(game)} {
     trackGame->attach(this);
 }
 

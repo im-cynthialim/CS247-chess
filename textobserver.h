@@ -3,14 +3,16 @@
 #include "observer.h"
 #include "game.h"
 #include <vector>
+#include <utility>
 
+using namespace std;
 
 class Game;
 
 class TextObserver : public Observer {
-    Game *trackGame;
+    shared_ptr<Game> trackGame;
     public:
-        TextObserver(Game *game);
+        TextObserver(shared_ptr<Game> game);
         void notify() override;
         ~TextObserver();
 };

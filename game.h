@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 #include <string>
 #include <cctype> //to lowercase chars
 #include <vector>
@@ -27,10 +28,14 @@ using namespace std;
 
 class Game : public Subject
 {
-    Player *white = nullptr; // Player is abstract so ptr needed for dynamic type
-    Player *black = nullptr;
+    std::shared_ptr<Player> white;
+    
+    // Player *white = nullptr; // Player is abstract so ptr needed for dynamic type
+    std::shared_ptr<Player> black;
+    // Player *black = nullptr;
     std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
-    Player *playerTurn = nullptr;
+    // Player *playerTurn = nullptr;
+    std::shared_ptr<Player> playerTurn;
     Colour startColour = WHITE;
     bool pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay);
     void updateEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
@@ -220,35 +225,43 @@ public:
     {
         if (whiteType == "human")
         {
-            white = new Human(WHITE);
+            white = make_shared<Human>(WHITE);
+            // white = new Human(WHITE);
         }
         else if (whiteType == "computer1")
         {
-            white = new ComputerOne(WHITE);
+            white = make_shared<ComputerOne>(WHITE);
+            // white = new ComputerOne(WHITE);
         }
         else if (whiteType == "computer2")
         {
-            white = new ComputerTwo(WHITE);
+            white = make_shared<ComputerTwo>(WHITE);
+            // white = new ComputerTwo(WHITE);
         }
         else if (whiteType == "computer3")
         {
-            white = new ComputerThree(WHITE);
+            white = make_shared<ComputerThree>(WHITE);
+            // white = new ComputerThree(WHITE);
         }
         if (blackType == "human")
         {
-            black = new Human(BLACK);
+            black = make_shared<Human>(BLACK);
+            // black = new Human(BLACK);
         }
         else if (blackType == "computer1")
         {
-            black = new ComputerOne(BLACK);
+            black = make_shared<ComputerOne>(BLACK);
+            // black = new ComputerOne(BLACK);
         }
         else if (blackType == "computer2")
         {
-            black = new ComputerTwo(BLACK);
+            black = make_shared<ComputerTwo>(BLACK);
+            // black = new ComputerTwo(BLACK);
         }
         else if (blackType == "computer3")
         {
-            black = new ComputerThree(BLACK);
+            black = make_shared<ComputerThree>(BLACK);
+            // black = new ComputerThree(BLACK);
         }
     }
 
@@ -429,8 +442,8 @@ public:
             board[i][j] = nullptr;
         }
     }
-    delete white; // delete players
-    delete black;
+    // delete white; // delete players
+    // delete black;
 
     this->detach();
 

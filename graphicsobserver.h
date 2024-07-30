@@ -6,10 +6,10 @@
 #include <vector>
 
 class GraphicsObserver : public Observer {
-    Game *trackGame;
+    std::shared_ptr<Game> trackGame;
     Xwindow w{240, 220};
     public:
-        GraphicsObserver(Game *game);
+        GraphicsObserver(std::shared_ptr<Game> game);
         void notify() override;
         ~GraphicsObserver();
 };

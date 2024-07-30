@@ -1,4 +1,7 @@
 #include "game.h"
+#include <memory>
+
+using namespace std;
 
 char Game::getState(int row, int col) const {
     if (this->board.at(row).at(col) != nullptr) { // if there exists a player on the board
@@ -13,7 +16,7 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
        bool pawnPromotion = false;
 
     if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7 && moveToPlay.getFromX()) {
-            if (dynamic_cast<Human *>(playerTurn))
+            if (dynamic_pointer_cast<Human>(playerTurn))
             {
                 cin >> promoteTo;
 
@@ -33,7 +36,7 @@ bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
     else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
         { // check for white pawn promotion
             string validPieces = "QRNB";
-            if (dynamic_cast<Human *>(playerTurn))
+            if (dynamic_pointer_cast<Human>(playerTurn))
             {
                 cin >> promoteTo;
 
