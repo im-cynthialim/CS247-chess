@@ -11,90 +11,59 @@ char Game::getState(int row, int col) const {
 }
 
 bool Game::pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay) {
-       string validPieces = "qrnb";
-       char promoteTo = 'p';
-       bool pawnPromotion = false;
+    string validPieces = "qrnbQRNB";
+    char promoteTo = ' ';
+    bool pawnPromotion = false;
 
-    if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'p' && moveToPlay.getToX() == 7 && moveToPlay.getFromX()) {
-            if (dynamic_pointer_cast<Human>(playerTurn))
-            {
+    char pieceType = board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType();
+    bool isWhitePawn = (pieceType == 'P');
+    bool isBlackPawn = (pieceType == 'p');
+    bool isPromotionRow = (moveToPlay.getToX() == (isWhitePawn ? 0 : 7));
+
+    if ((isWhitePawn || isBlackPawn) && isPromotionRow) {
+        if (dynamic_pointer_cast<Human>(playerTurn)) {
+            cin >> promoteTo;
+            
+            while (validPieces.find(promoteTo) == string::npos) {
+                cout << "Invalid piece for promotion, choose again" << "\n";
                 cin >> promoteTo;
-
-                while (validPieces.find(promoteTo) == string::npos)
-                {
-                    cout << "Invalid piece for promotion, choose again" << "\n";
-                    cin >> promoteTo;
-                }
-                pawnPromotion = true;
             }
-            else
-            { // choose promotion piece if computer
-                promoteTo = 'q';
-                pawnPromotion = true;
-            }
-    }
-    else if (board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType() == 'P' && moveToPlay.getToX() == 0)
-        { // check for white pawn promotion
-            string validPieces = "QRNB";
-            if (dynamic_pointer_cast<Human>(playerTurn))
-            {
-                cin >> promoteTo;
-
-                while (validPieces.find(promoteTo) == string::npos)
-                {
-                    cout << "Invalid piece for promotion, choose again" << "\n";
-                    cin >> promoteTo;
-                }
-                pawnPromotion = true;
-            }
-        else
-        { // choose promotion piece if computer
-            promoteTo = 'Q';
+            pawnPromotion = true;
+        } else {
+            // Choose promotion piece if computer
+            promoteTo = isWhitePawn ? 'Q' : 'q';
             pawnPromotion = true;
         }
     }
-    
 
-        if (pawnPromotion) {
-          switch (tolower(promoteTo))
-            {
-
-            // queen
-            case 'q':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // knight
-            case 'n':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Knight(tolower(promoteTo) == 'n' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // bishop
-            case 'b':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Bishop(tolower(promoteTo) == 'b' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            // rook
-            case 'r':
-            {
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Rook(tolower(promoteTo) == 'r' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-            default:
-                board[moveToPlay.getToX()][moveToPlay.getToY()] = new Queen(tolower(promoteTo) == 'q' ? BLACK : WHITE, promoteTo);
-                break;
-            }
-
-            // replace pawn with piece chosen
-            delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
-            board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
-            return true;
+    if (pawnPromotion) {
+        // Determine the color based on the pawn's original color
+        Colour color = (isWhitePawn ? WHITE : BLACK);
+        
+        // Create the new piece based on the promotion choice
+        Piece* newPiece = nullptr;
+        switch (tolower(promoteTo)) {
+            case 'q': newPiece = new Queen(color, promoteTo); break;
+            case 'n': newPiece = new Knight(color, promoteTo); break;
+            case 'b': newPiece = new Bishop(color, promoteTo); break;
+            case 'r': newPiece = new Rook(color, promoteTo); break;
+            default: newPiece = new Queen(color, promoteTo); break;
         }
-        return false;
+        
+        // Debugging output
+        cout << "Promoting pawn at (" << moveToPlay.getFromX() << ", " << moveToPlay.getFromY() << ") to "
+             << promoteTo << " at (" << moveToPlay.getToX() << ", " << moveToPlay.getToY() << ")" << endl;
+        
+        // Move the piece and delete the old pawn
+        delete board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+        board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
+        board[moveToPlay.getToX()][moveToPlay.getToY()] = newPiece;
+        return true;
+    }
+    return false;
 }
+
+
 
 void Game::updateEnPassant(vector<vector<Piece*>> &board, Move moveToPlay) {
     if(board[moveToPlay.getFromX()][moveToPlay.getFromY()] == nullptr) {
