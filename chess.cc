@@ -12,11 +12,11 @@ int main () {
     float whiteScore = 0;
     float blackScore = 0;
 
-    // Game *game = new Game;
-    std::unique_ptr<Game> game = std::make_unique<Game>();
-    // new TextObserver(game);
+    Game *game = new Game;
+    // std::unique_ptr<Game> game = std::make_unique<Game>();
+    new TextObserver(game);
     // new GraphicsObserver(game);
-    // game->notifyObservers();
+    game->notifyObservers();
 
     std::string command;
 
