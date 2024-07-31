@@ -222,15 +222,6 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
         isKingTwoLeftChecked = true;
     }
 
-    //if the king is moved two spaces over to the right, is it in check? (dont move rook)
-    bool isKingThreeLeftChecked = false;
-    simulateBoard = board;
-    simulateBoard[row][col-3] = this;
-    simulateBoard[row][col] = nullptr;
-    if ((isKingInCheck(simulateBoard[row][col-3]->getPieceType(), simulateBoard))) {
-        isKingThreeLeftChecked = true;
-    }
-
     //add castle farthest to me
     if (
         !hasRookFarthestMoved && //rook farthest hasn't move
@@ -238,8 +229,7 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
         board[origKingPos.first][origKingPos.second - 2] == nullptr && //no piece two left of the king
         board[origKingPos.first][origKingPos.second - 3] == nullptr && //no piece two left of the king
         !isKingOneLeftChecked && 
-        !isKingTwoLeftChecked &&
-        !isKingThreeLeftChecked
+        !isKingTwoLeftChecked
     ) {
         validMoves.push_back(Move{row, col, row, col-2});
     }
