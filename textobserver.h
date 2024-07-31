@@ -10,9 +10,9 @@ using namespace std;
 class Game;
 
 class TextObserver : public Observer {
-    shared_ptr<Game> trackGame;
+    Game* trackGame;
     public:
-        TextObserver(shared_ptr<Game> game);
+        TextObserver(Game* game);
         void notify() override;
         ~TextObserver();
 };

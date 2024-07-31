@@ -134,7 +134,7 @@ public:
         }
         else if (oppMoves.size() == 0 && movePutACheck == false)
         {
-            cout << "Stalement\n";
+            cout << "Stalemate\n";
             status = DRAW;
         }
         else if (oppMoves.size() != 0 && movePutACheck == true)
@@ -159,12 +159,12 @@ public:
         if (playerTurn->getColour() == BLACK)
         {
             status = WHITEWINS;
-            cout << "white wins\n";
+            cout << "White wins\n";
         }
         else
         {
             status = BLACKWINS;
-            cout << "black wins\n";
+            cout << "Black wins\n";
         }
     }
 
@@ -313,6 +313,8 @@ public:
 
                     char toLower = tolower(pieceType); // generalize all inputs to lowercase for faster piece classifying
 
+        
+
                     switch (toLower)
                     {
                     // pawn
@@ -456,7 +458,7 @@ public:
     // delete white; // delete players
     // delete black;
 
-    this->detach();
+    // this->detach();
 
     }
 };

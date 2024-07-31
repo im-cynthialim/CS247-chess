@@ -64,20 +64,27 @@ class Player
                 boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()]; //simulate moving the piece over
                 boardCopy[allMovesICanMake[i].getFromX()][allMovesICanMake[i].getFromY()] = nullptr;
 
-                //if the move you made was a pawn promotion, the simulated board should be a queen
-                if(
-                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'P' &&
-                    allMovesICanMake[i].getToX() == 0
-                ) {
-                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(WHITE, 'P');
-                }
-                else if(
-                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'p' &&
-                    allMovesICanMake[i].getToX() == 7
-                ) {
-                    boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(BLACK, 'p');
-                }
-                //
+                // //if the move you made was a pawn promotion, the simulated board should be a queen
+                // bool pawnPromote = false;
+                // if(
+                //     boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'P' &&
+                //     allMovesICanMake[i].getToX() == 0
+                // ) {
+                //     boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(WHITE, 'P');
+                //     pawnPromote = true;
+                // }
+                // else if(
+                //     boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()]->getPieceType() == 'p' &&
+                //     allMovesICanMake[i].getToX() == 7
+                // ) {
+                //     boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()] = new Queen(BLACK, 'p');
+                //     pawnPromote = true;
+                // }
+
+                // if(pawnPromote) {
+                //     delete boardCopy[allMovesICanMake[i].getToX()][allMovesICanMake[i].getToY()];
+                // }
+                // //
 
 
                 if(isKingInCheck(otherKing, boardCopy)) {

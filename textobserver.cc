@@ -5,7 +5,7 @@
 
 using namespace std;
 
-TextObserver::TextObserver(shared_ptr<Game> game) :
+TextObserver::TextObserver(Game* game) :
 trackGame{move(game)} {
     trackGame->attach(this);
 }

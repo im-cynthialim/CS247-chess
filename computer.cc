@@ -70,7 +70,6 @@
 
                         return priority1 < priority2;
                     });
-
                 return allCaptureMoves;
          }
-        
+
