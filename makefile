@@ -1,7 +1,7 @@
 # CXX = g++
 # CXXFLAGS = -std=c++14 -Wall -MMD
 # EXEC = chess
-# OBJECTS = test.o rook.o piece.o queen.o move.o king.o
+# OBJECTS = chess.o
 # DEPENDS = ${OBJECTS:.o=.d} 
 
 # ${EXEC}: ${OBJECTS}
@@ -22,7 +22,7 @@ OBJECTS=${CCFILES:.cc=.o}
 DEPENDS=${CCFILES:.cc=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${OBJECTS} -o ${EXEC}
+	${CXX} ${OBJECTS} -o ${EXEC} -lX11
 
 -include ${DEPENDS}
 

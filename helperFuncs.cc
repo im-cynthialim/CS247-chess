@@ -2,8 +2,11 @@
 #include "enums.h"
 #include "piece.h"
 #include "helperFuncs.h"
+#include <memory>
 
-bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
+using namespace std;
+
+bool isKingInCheck(char king, const vector<vector<unique_ptr<Piece>>>& board) {
         Colour kingColour = WHITE;
         if (king  == 'k') {
             kingColour = BLACK;
@@ -13,7 +16,7 @@ bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
         int kingPosY;
         for (size_t row = 0; row < board.size(); ++row) {
             for (size_t col = 0; col < board[row].size(); ++col) {
-                Piece* piece = board[row][col];
+                unique_ptr<Piece> piece = board[row][col]->getCreateNew(board[row][col]->getColour(), board[row][col]->getPieceType());
                 if(piece != nullptr)  {
                     if(piece->getPieceType() == king) {
                         kingPosX = row;
@@ -25,7 +28,7 @@ bool isKingInCheck(char king, const vector<vector<Piece*>>& board) {
 
         for (size_t row = 0; row < board.size(); ++row) {
             for (size_t col = 0; col < board[row].size(); ++col) {
-                Piece* piece = board[row][col];
+                unique_ptr<Piece> piece = board[row][col]->getCreateNew(board[row][col]->getColour(), board[row][col]->getPieceType());
                 if(piece != nullptr && piece->getColour() != kingColour) { //other guys piece from the king
                     //find all LINES OF SIGHT moves of other guys pieces on the board
                     vector<Move> possibleMoves = board[row][col]->getLineOfSightMoves(board, row, col);

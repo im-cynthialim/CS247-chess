@@ -8,14 +8,14 @@
 #include "king.h"
 #include "move.h"
 #include "helperFuncs.h"
-
+#include <memory>
 
 using namespace std;
 
 // construct bishop
 Bishop::Bishop(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
-vector<Move> Bishop::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> Bishop::lineOfSight(const vector<vector<unique_ptr<Piece>>> &board, int curI, int curJ) {
     vector<Move> moves;
 
     int checkNextI = curI - 1;

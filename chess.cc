@@ -15,11 +15,11 @@ int main () {
 
     // Game *game = new Game;
     
-    // std::shared_ptr<Game> game = std::make_unique<Game>();
+
     std::shared_ptr<Game> game = std::make_shared<Game>();
     new TextObserver(game);
-    new GraphicsObserver(game);
-    game->notifyObservers();
+    // new GraphicsObserver(game);
+    // game->notifyObservers();
 
     std::string command;
 
@@ -30,7 +30,7 @@ int main () {
                 // delete game; // Clean up the old game
                 game = std::make_shared<Game>(); // Create a fresh game
                 new TextObserver(game);
-                new GraphicsObserver(game);
+                // new GraphicsObserver(game);
 
               
             }
@@ -55,21 +55,21 @@ int main () {
                     whiteScore++;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    new TextObserver(game);
-                    new GraphicsObserver(game);
+                    // new TextObserver(game);
+                    // new GraphicsObserver(game);
                 } else if (game->status == BLACKWINS) {
                     blackScore++;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    new TextObserver(game);
-                    new GraphicsObserver(game);
+                    // new TextObserver(game);
+                    // new GraphicsObserver(game);
                 } else if (game->status == DRAW) {
                     whiteScore = whiteScore + 0.5;
                     blackScore = blackScore + 0.5;
                     // delete game; // Game is done
                     game = std::make_shared<Game>(); // Create a fresh game
-                    new TextObserver(game);
-                    new GraphicsObserver(game);
+                    // new TextObserver(game);
+                    // new GraphicsObserver(game);
                 }
             } else {
                 std::cout << "No game in progress.\n";
@@ -86,8 +86,8 @@ int main () {
                 //update who won
                 // delete game; // Game is done
                 game = std::make_shared<Game>(); // Create a fresh game
-                new TextObserver(game);
-                new GraphicsObserver(game);
+                // new TextObserver(game);
+                // new GraphicsObserver(game);
             } else {
                 std::cout << "No game in progress.\n";
             }
@@ -97,3 +97,26 @@ int main () {
     std::cout << "WhiteScore: " << whiteScore << "\n";
     std::cout << "BlackScore: " << blackScore << "\n";
 }
+
+// #include <iostream>
+// #include <vector>
+// #include <memory>
+// #include <string>
+// #include "game.h"
+// #include "player.h"
+// #include "piece.h"
+// #include "textobserver.h"
+// #include <utility>
+// #include "graphicsobserver.h"
+
+
+// int main() {
+//     std::shared_ptr<Game> game = std::make_shared<Game>();
+
+//      std::string whitePlayer, blackPlayer;
+//             std::cin >> whitePlayer >> blackPlayer;
+//             // Extract player types and start a new game
+//             game->setUpGame(whitePlayer, blackPlayer);
+//             game->notifyObservers();
+    
+// }

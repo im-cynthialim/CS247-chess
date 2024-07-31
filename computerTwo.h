@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "computer.h"
+#include <memory>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ class ComputerTwo : public Computer
 {
     public:
         ComputerTwo(Colour colour) : Computer(colour) {}
-        Move chooseMove(const vector<vector<Piece*>>& board) override {
+        Move chooseMove(const  vector<vector<unique_ptr<Piece>>>& board) override {
             vector<Move> captureMoves = findCaptures(board);
             vector<Move> checkMoves = findChecks(board);
 

@@ -1,6 +1,7 @@
 #include "knight.h"
 #include "king.h"
 #include "piece.h"
+#include <memory>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -9,7 +10,7 @@ using namespace std;
 
 Knight::Knight(Colour c, char PieceType): Piece::Piece{c, PieceType} {};
 
-vector<Move> Knight::lineOfSight(const vector<vector<Piece*>>& board, int row, int col) {
+vector<Move> Knight::lineOfSight(const  vector<vector<unique_ptr<Piece>>>& board, int row, int col) {
 
     vector<Move> validMoves {};
     //counter clockwise motion

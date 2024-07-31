@@ -11,7 +11,7 @@ class Human : public Player
 {
     public:
         Human(Colour colour) : Player(colour) {}
-        Move chooseMove(const vector<vector<Piece*>>& board) override {
+        Move chooseMove(const  vector<vector<unique_ptr<Piece>>>& board) override {
 
             while(true) {
                 char fromCol;

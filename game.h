@@ -33,13 +33,15 @@ class Game : public Subject
     // Player *white = nullptr; // Player is abstract so ptr needed for dynamic type
     std::shared_ptr<Player> black;
     // Player *black = nullptr;
-    std::vector<std::vector<Piece *>> board{8, std::vector<Piece *>(8, nullptr)};
+    std::vector<std::vector<unique_ptr<Piece>>> board;
+    // vector<vector<unique_ptr<Piece>>> board;
+
     // Player *playerTurn = nullptr;
     std::shared_ptr<Player> playerTurn;
     Colour startColour = WHITE;
-    bool pawnPromotionMove(vector<vector<Piece*>> &board, Move moveToPlay);
-    void updateEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
-    bool executeEnPassant(vector<vector<Piece*>>&board, Move moveToPlay);
+    bool pawnPromotionMove( vector<vector<unique_ptr<Piece>>> &board, Move moveToPlay);
+    void updateEnPassant( vector<vector<unique_ptr<Piece>>>&board, Move moveToPlay);
+    bool executeEnPassant( vector<vector<unique_ptr<Piece>>>&board, Move moveToPlay);
 
 public:
     STATUS status = NOTSTARTED;
@@ -58,16 +60,18 @@ public:
 
         //Castle stuffs: move the rook
         if(
-            tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
+            board[moveToPlay.getFromX()][moveToPlay.getFromY()] != nullptr && tolower(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType()) == 'k' &&
             abs(moveToPlay.getFromY() - moveToPlay.getToY()) == 2
         ) {
             if(moveToPlay.getFromY() - moveToPlay.getToY() == 2)  { //king moves left (castle far)
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->hasMoved = true;
-                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = move(board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]);
+                // board[moveToPlay.getFromX()][moveToPlay.getFromY() - 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->getCreateNew(board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->getColour(), board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4]->getPieceType());
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() - 4] = nullptr;
             } else if(moveToPlay.getFromY() - moveToPlay.getToY() == -2) { //king moves right (castle close)
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->hasMoved = true;
-                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3];
+                board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = move( board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]);
+                // board[moveToPlay.getFromX()][moveToPlay.getFromY() + 1] = board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->getCreateNew(board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->getColour(), board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3]->getPieceType());
                 board[moveToPlay.getFromX()][moveToPlay.getFromY() + 3] = nullptr;
             }
         }
@@ -77,8 +81,10 @@ public:
         for (size_t i = 0; i < board.size(); ++i) {
             for (size_t j = 0; j < board.size(); ++j) {
                 if (board[i][j] != nullptr && tolower(board[i][j]->getPieceType() == 'p')) {
-                    static_cast<Pawn *>(board[i][j])->setPassant("left", false);
-                   static_cast<Pawn *>(board[i][j])->setPassant("right", false);
+                    Pawn *pawn = dynamic_cast<Pawn*>(board[i][j].get());
+                    pawn->setPassant("left", false);
+                    pawn->setPassant("right", false);
+
                 }
             }
         }
@@ -91,12 +97,14 @@ public:
         if(!wasPromoted && !execPassant) {
             board[moveToPlay.getFromX()][moveToPlay.getFromY()]->hasMoved = true;
             if(board[moveToPlay.getToX()][moveToPlay.getToY()] != nullptr) {
-                delete board[moveToPlay.getToX()][moveToPlay.getToY()];
+                // delete board[moveToPlay.getToX()][moveToPlay.getToY()];
                 board[moveToPlay.getToX()][moveToPlay.getToY()] = nullptr;
                 
             }
+
+            board[moveToPlay.getToX()][moveToPlay.getToY()] = move(board[moveToPlay.getFromX()][moveToPlay.getFromY()]);
             
-            board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()];
+            // board[moveToPlay.getToX()][moveToPlay.getToY()] = board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getCreateNew(board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getColour(), board[moveToPlay.getFromX()][moveToPlay.getFromY()]->getPieceType());
             board[moveToPlay.getFromX()][moveToPlay.getFromY()] = nullptr;
 
         }
@@ -171,44 +179,138 @@ public:
     bool gameCreatedViaSetup = false;
 
     // default constructor
-    Game() : status{NOTSTARTED} {}
+    Game() : status{NOTSTARTED} {
+
+    // vector<unique_ptr<Piece>> emptyRow;
+
+    //     for (int i = 0; i < 8; ++i) {
+    //         emptyRow.push_back(nullptr);
+    //     }
+    
+
+    //     for (int i = 0; i < 8; ++i) {
+    //         board.push_back(move(emptyRow));
+    //     }
+
+    //     for (int i = 0; i < 8; ++i) {
+    //         for (int j = 0; j < 8; ++j) {
+    //             cout << "a";
+    //         }
+    //         cout << "\n";
+    //     }
+    }
 
     void setUpGame(const string &whiteType, const string &blackType)
     {
+           
         status = RUNNING;
         addPlayersToGame(whiteType, blackType);
 
         if (!gameCreatedViaSetup)
         {
+            vector<unique_ptr<Piece>> boardRow;
+
+            for (int i = 0; i < 8; ++i)
+            {
+                boardRow.push_back(make_unique<Pawn>(BLACK, 'p'));
+            }
+            board.push_back(move(boardRow));
             // set up default piece positions
             // black pieces
-            board[0][0] = new Rook(BLACK, 'r');
-            board[0][1] = new Knight(BLACK, 'n');
-            board[0][2] = new Bishop(BLACK, 'b');
-            board[0][3] = new Queen(BLACK, 'q');
-            board[0][4] = new King(BLACK, 'k');
-            board[0][5] = new Bishop(BLACK, 'b');
-            board[0][6] = new Knight(BLACK, 'n');
-            board[0][7] = new Rook(BLACK, 'r');
+
+            boardRow.clear();
+
+            boardRow.push_back(make_unique<Rook>(BLACK, 'r'));
+            boardRow.push_back(make_unique<Knight>(BLACK, 'n'));
+            boardRow.push_back(make_unique<Bishop>(BLACK, 'b'));
+            boardRow.push_back(make_unique<Queen>(BLACK, 'q'));
+            boardRow.push_back(make_unique<King>(BLACK, 'k'));
+            boardRow.push_back(make_unique<Bishop>(BLACK, 'b'));
+            boardRow.push_back(make_unique<Knight>(BLACK, 'n'));
+            boardRow.push_back(make_unique<Rook>(BLACK, 'r'));
+
+            board.push_back(move(boardRow));
+
             // black pawns
-            for (int i = 0; i < 8; ++i)
-            {
-                board[1][i] = new Pawn(BLACK, 'p');
+          
+
+            
+
+
+            //4 empty rows
+            vector<unique_ptr<Piece>> emptyRow;
+
+            for (int i = 0; i < 8; ++i) {
+                emptyRow.push_back(nullptr);
             }
+            board.push_back(move(emptyRow));
+            for (int i = 0; i < 8; ++i) {
+                emptyRow.push_back(nullptr);
+            }
+            board.push_back(move(emptyRow));
+            for (int i = 0; i < 8; ++i) {
+                emptyRow.push_back(nullptr);
+            }
+            board.push_back(move(emptyRow));
+            for (int i = 0; i < 8; ++i) {
+                emptyRow.push_back(nullptr);
+            }
+            board.push_back(move(emptyRow));
+
+            // board[0][0] = make_unique<Rook>(BLACK, 'r');
+            // board[0][1] = make_unique<Knight>(BLACK, 'n');
+            // board[0][2] = make_unique<Bishop>(BLACK, 'b');
+            // board[0][3] = make_unique<Queen>(BLACK, 'q');
+            // board[0][4] = make_unique<King>(BLACK, 'k');
+            // board[0][5] = make_unique<Bishop>(BLACK, 'b');
+            // board[0][6] = make_unique<Knight>(BLACK, 'n');
+            // board[0][7] = make_unique<Rook>(BLACK, 'r');
+            // // black pawns
+            // for (int i = 0; i < 8; ++i)
+            // {
+            //     board[1][i] = make_unique<Pawn>(BLACK, 'p');
+            // }
+
             // white pieces
-            board[7][0] = new Rook(WHITE, 'R');
-            board[7][1] = new Knight(WHITE, 'N');
-            board[7][2] = new Bishop(WHITE, 'B');
-            board[7][3] = new Queen(WHITE, 'Q');
-            board[7][4] = new King(WHITE, 'K');
-            board[7][5] = new Bishop(WHITE, 'B');
-            board[7][6] = new Knight(WHITE, 'N');
-            board[7][7] = new Rook(WHITE, 'R');
+            
+            
+            
             // white pawns
+
+
+            boardRow.clear();
             for (int i = 0; i < 8; ++i)
             {
-                board[6][i] = new Pawn(WHITE, 'P');
+                boardRow.push_back(make_unique<Pawn>(WHITE, 'p'));
             }
+            board.push_back(move(boardRow));
+
+            boardRow.clear();
+            boardRow.push_back(make_unique<Rook>(WHITE, 'R'));
+            boardRow.push_back(make_unique<Knight>(WHITE, 'N'));
+            boardRow.push_back(make_unique<Bishop>(WHITE, 'B'));
+            boardRow.push_back(make_unique<Queen>(WHITE, 'Q'));
+            boardRow.push_back(make_unique<King>(WHITE, 'K'));
+            boardRow.push_back(make_unique<Bishop>(WHITE, 'B'));
+            boardRow.push_back(make_unique<Knight>(WHITE, 'N'));
+            boardRow.push_back(make_unique<Rook>(WHITE, 'R'));
+
+            board.push_back(move(boardRow));
+            // board[7][0] = make_unique<Rook>(WHITE, 'R');
+            // board[7][1] = make_unique<Knight>(WHITE, 'N');
+            // board[7][2] = make_unique<Bishop>(WHITE, 'B');
+            // board[7][3] = make_unique<Queen>(WHITE, 'Q');
+            // board[7][4] = make_unique<King>(WHITE, 'K');
+            // board[7][5] = make_unique<Bishop>(WHITE, 'B');
+            // board[7][6] = make_unique<Knight>(WHITE, 'N');
+            // board[7][7] = make_unique<Rook>(WHITE, 'R');
+
+
+            // for (int i = 0; i < 8; ++i)
+            // {
+
+            //     board[6][i] = make_unique<Pawn>(WHITE, 'P');
+            // }
         }
 
         if (startColour == BLACK)
@@ -296,8 +398,8 @@ public:
 
                     if (board[rowLoc][colLoc] != nullptr)
                     {
-                        delete board[rowLoc][colLoc];
-                        board[rowLoc][colLoc];
+                        // delete board[rowLoc][colLoc];
+                        board[rowLoc][colLoc] = nullptr;
                     }
 
                     char toLower = tolower(pieceType); // generalize all inputs to lowercase for faster piece classifying
@@ -306,34 +408,40 @@ public:
                     {
                     // pawn
                     case 'p':
-                        board[rowLoc][colLoc] = new Pawn(pieceType == 'p' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<Pawn>(pieceType == 'p' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new Pawn(pieceType == 'p' ? BLACK : WHITE, pieceType);
                         break;
                     // king
                     case 'k':
-                        board[rowLoc][colLoc] = new King(pieceType == 'k' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<King>(pieceType == 'k' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new King(pieceType == 'k' ? BLACK : WHITE, pieceType);
                         break;
                     // queen
                     case 'q':
                     {
-                        board[rowLoc][colLoc] = new Queen(pieceType == 'q' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<Queen>(pieceType == 'q' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new Queen(pieceType == 'q' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     // knight
                     case 'n':
                     {
-                        board[rowLoc][colLoc] = new Knight(pieceType == 'n' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<Knight>(pieceType == 'n' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new Knight(pieceType == 'n' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     // bishop
                     case 'b':
                     {
-                        board[rowLoc][colLoc] = new Bishop(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<Bishop>(pieceType == 'b' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new Bishop(pieceType == 'b' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     // rook
                     case 'r':
                     {
-                        board[rowLoc][colLoc] = new Rook(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                        board[rowLoc][colLoc] = make_unique<Rook>(pieceType == 'r' ? BLACK : WHITE, pieceType);
+                        // board[rowLoc][colLoc] = new Rook(pieceType == 'r' ? BLACK : WHITE, pieceType);
                         break;
                     }
                     default:
@@ -358,7 +466,7 @@ public:
 
                 if (board[rowLoc][colLoc] != nullptr)
                 {
-                    delete board[rowLoc][colLoc];
+                    // delete board[rowLoc][colLoc];
                     board[rowLoc][colLoc] = nullptr;
                 }
                 notifyObservers();
@@ -386,7 +494,8 @@ public:
                 {
                     for (size_t col = 0; col < board[row].size(); ++col)
                     {
-                        Piece *piece = board[row][col];
+                        unique_ptr<Piece> piece = board[row][col]->getCreateNew(board[row][col]->getColour(), board[row][col]->getPieceType());
+                        // Piece *piece = dynamic_cast<Piece>(board[row][col].get());
                         if (piece != nullptr)
                         {
                             // pawns not in first or last row
@@ -436,16 +545,16 @@ public:
 
     ~Game() {
     // clean up board
-    for (int i = 0; i < board.size(); ++i) {
-        for (int j = 0; j < board[i].size(); ++j) {
-            delete board[i][j];
-            board[i][j] = nullptr;
-        }
-    }
+    // for (int i = 0; i < board.size(); ++i) {
+    //     for (int j = 0; j < board[i].size(); ++j) {
+    //         delete board[i][j];
+    //         board[i][j] = nullptr;
+    //     }
+    // }
     // delete white; // delete players
     // delete black;
 
-    this->detach();
+    // this->detach();
 
     }
 };

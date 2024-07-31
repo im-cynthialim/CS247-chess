@@ -5,6 +5,7 @@
 #include "move.h"
 #include <iostream>
 #include "king.h"
+#include <memory>
 #include <cctype>
 #include "piece.h"
 #include "helperFuncs.h"
@@ -14,7 +15,7 @@ using namespace std;
 
 Queen::Queen(Colour c, char piecetype): Piece::Piece{c, piecetype} {};
 
-vector<Move> Queen::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) { 
+vector<Move> Queen::lineOfSight(const  vector<vector<unique_ptr<Piece>>> &board, int curI, int curJ) { 
     vector<Move> moves = {};
     // // queen = bishop + rook
     // execute bishop diagonals

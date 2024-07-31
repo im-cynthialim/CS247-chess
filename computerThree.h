@@ -4,6 +4,7 @@
 #include <vector>
 #include "computer.h"
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class ComputerThree : public Computer
     public:
         ComputerThree(Colour colour) : Computer(colour) {}
 
-        Move chooseMove(const vector<vector<Piece*>>& board) override {
+        Move chooseMove(const  vector<vector<unique_ptr<Piece>>>& board) override {
             vector<Move> avoidCaptureMoves = avoidCaptures(board);
             vector<Move> captureMoves = findCaptures(board);
             vector<Move> checkMoves = findChecks(board);            

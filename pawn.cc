@@ -24,7 +24,7 @@ void Pawn::setPassant(string dir, bool val) {
     return;
 }
 
-vector<Move> Pawn::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> Pawn::lineOfSight(const  vector<vector<unique_ptr<Piece>>> &board, int curI, int curJ) {
     // return an array of moves for the pawn
     vector<Move> moves = {};
 

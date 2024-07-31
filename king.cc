@@ -7,12 +7,13 @@
 #include <iostream>
 #include "helperFuncs.h"
 #include <cctype>
+#include <memory>
 using namespace std;
 
 // construct King object
 King::King(Colour c, char pieceType): Piece{c, pieceType} {}
 
-vector<Move> King::lineOfSight(const vector<vector<Piece*>> &board, int curI, int curJ) {
+vector<Move> King::lineOfSight(const  vector<vector<unique_ptr<Piece>>> &board, int curI, int curJ) {
 
     vector<Move> moves = {};
     // // check all 8 scenarios
@@ -110,15 +111,28 @@ vector<Move> King::lineOfSight(const vector<vector<Piece*>> &board, int curI, in
     return moves;
 }
 
-vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, int col) {
+vector<Move> King::possibleMoves(const  vector<vector<unique_ptr<Piece>>> &board, int row, int col) {
     vector<Move> validMoves{};
     vector<Move> potentialMoves = lineOfSight(board, row, col);  //get general moves of a pieces
 
     //is this move going to cause the king to be in check? 
     for(int i = 0; i < potentialMoves.size(); i++) {
-        vector<vector<Piece*>> simulateBoard = board;
+          vector<vector<unique_ptr<Piece>>> simulateBoard;
+            for (size_t r = 0; r < board.size(); ++r)
+            {
+                for (size_t c = 0; c < board[r].size(); ++c)
+                {
+                     if (simulateBoard[r][c] != nullptr) {
+                            simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                        }
+                        else {
+                            simulateBoard[r][c] = nullptr;
+                        }
+                        // boa
+                }
+            }
         simulateBoard[row][col] = nullptr;
-        simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()] = this; // put king in new potential place
+        simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()] = this->getCreateNew(this->getColour(), this->getPieceType()); // put king in new potential place
         if (!isKingInCheck(simulateBoard[potentialMoves[i].getToX()][potentialMoves[i].getToY()]->getPieceType(), simulateBoard)) { // no enemy line of sight puts my king in check for my simulated move, therefore valid move
             validMoves.push_back(potentialMoves[i]);
         }
@@ -164,8 +178,21 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //6)if the king is put one space over to the right, is it in check? (dont move rook)
     bool isKingOneRightChecked = false;
-    vector<vector<Piece*>> simulateBoard = board;
-    simulateBoard[row][col+1] = this;
+    vector<vector<unique_ptr<Piece>>> simulateBoard;
+            for (size_t r = 0; r < board.size(); ++r)
+            {
+                for (size_t c = 0; c < board[r].size(); ++c)
+                {
+                     if (simulateBoard[r][c] != nullptr) {
+                            simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                        }
+                        else {
+                            simulateBoard[r][c] = nullptr;
+                        }
+                        // boa
+                }
+            }
+    simulateBoard[row][col+1] = this->getCreateNew(this->getColour(),this->getPieceType());
     simulateBoard[row][col] = nullptr;
     if ((isKingInCheck(simulateBoard[row][col+1]->getPieceType(), simulateBoard))) {
         isKingOneRightChecked = true;
@@ -173,8 +200,22 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //7) if the king is moved two spaces over to the right, is it in check? (dont move rook)
     bool isKingTwoRightChecked = false;
-    simulateBoard = board;
-    simulateBoard[row][col+2] = this;
+    
+    for (size_t r = 0; r < board.size(); ++r)
+    {
+        for (size_t c = 0; c < board[r].size(); ++c)
+        {
+                if (simulateBoard[r][c] != nullptr) {
+                    simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                }
+                else {
+                    simulateBoard[r][c] = nullptr;
+                }
+                // boa
+        }
+    }
+
+    simulateBoard[row][col+2] = this->getCreateNew(this->getColour(), this->getPieceType());
     simulateBoard[row][col] = nullptr;
     if ((isKingInCheck(simulateBoard[row][col+2]->getPieceType(), simulateBoard))) {
         isKingTwoRightChecked = true;
@@ -206,8 +247,21 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
     
     //if the king is put one space over to the left, is it in check? (dont move rook)
     bool isKingOneLeftChecked = false;
-    simulateBoard = board;
-    simulateBoard[row][col-1] = this;
+    
+    for (size_t r = 0; r < board.size(); ++r)
+    {
+        for (size_t c = 0; c < board[r].size(); ++c)
+        {
+                if (simulateBoard[r][c] != nullptr) {
+                    simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                }
+                else {
+                    simulateBoard[r][c] = nullptr;
+                }
+                // boa
+        }
+    }
+    simulateBoard[row][col-1] = this->getCreateNew(this->getColour(), this->getPieceType());
     simulateBoard[row][col] = nullptr;
     if ((isKingInCheck(simulateBoard[row][col-1]->getPieceType(), simulateBoard))) {
         isKingOneLeftChecked = true;
@@ -215,8 +269,22 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //if the king is moved two spaces over to the right, is it in check? (dont move rook)
     bool isKingTwoLeftChecked = false;
-    simulateBoard = board;
-    simulateBoard[row][col-2] = this;
+
+
+    for (size_t r = 0; r < board.size(); ++r)
+    {
+        for (size_t c = 0; c < board[r].size(); ++c)
+        {
+                if (simulateBoard[r][c] != nullptr) {
+                    simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                }
+                else {
+                    simulateBoard[r][c] = nullptr;
+                }
+                // boa
+        }
+    }
+    simulateBoard[row][col-2] = this->getCreateNew(this->getColour(), this->getPieceType());
     simulateBoard[row][col] = nullptr;
     if ((isKingInCheck(simulateBoard[row][col-2]->getPieceType(), simulateBoard))) {
         isKingTwoLeftChecked = true;
@@ -224,8 +292,21 @@ vector<Move> King::possibleMoves(const vector<vector<Piece*>> &board, int row, i
 
     //if the king is moved two spaces over to the right, is it in check? (dont move rook)
     bool isKingThreeLeftChecked = false;
-    simulateBoard = board;
-    simulateBoard[row][col-3] = this;
+
+    for (size_t r = 0; r < board.size(); ++r)
+    {
+        for (size_t c = 0; c < board[r].size(); ++c)
+        {
+                if (simulateBoard[r][c] != nullptr) {
+                    simulateBoard[r][c] = board[r][c]->getCreateNew(board[r][c]->getColour(), board[r][c]->getPieceType());
+                }
+                else {
+                    simulateBoard[r][c] = nullptr;
+                }
+                // boa
+        }
+    }
+    simulateBoard[row][col-3] = this->getCreateNew(this->getColour(), this->getPieceType());
     simulateBoard[row][col] = nullptr;
     if ((isKingInCheck(simulateBoard[row][col-3]->getPieceType(), simulateBoard))) {
         isKingThreeLeftChecked = true;
